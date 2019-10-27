@@ -1,14 +1,10 @@
 import React from 'react';
+import { Cell } from '../App';
 
 enum CellKey {
     'dead-cell',
     'young-cell',
     'old-cell'
-}
-
-interface Cell {
-    cellStatus: number;
-    id: number;
 }
 
 interface Props {

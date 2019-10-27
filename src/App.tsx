@@ -4,12 +4,12 @@ import LifeBoard from './components/LifeBoard';
 import SpeedControls from './components/SpeedControls';
 
 const cellStatus = {
-  DEAD: 0,
-  YOUNG: 1,
-  OLD: 2
+    DEAD: 0,
+    YOUNG: 1,
+    OLD: 2,
 }
 
-interface Cell {
+export interface Cell {
     cellStatus: number;
     id: number;
 }
@@ -22,13 +22,52 @@ interface State {
     delay: number
 }
 
+function checkNeighbours(index: number, currentState: number, prevCells: Cell[]): number {
+    const width = 40;
+    const leftEdge = index % width === 0;
+    const rightEdge = (index + 1) % width === 0;
+    let indexs = [];
+
+    // check either sides
+    if (!leftEdge) indexs.push(index - 1);
+    if (!rightEdge) indexs.push(index + 1);
+
+    // check three cells above
+    if (index > width - 1) {
+        indexs.push(index - width);
+        if (!leftEdge) indexs.push((index - width) - 1);
+        if (!rightEdge) indexs.push((index - width) + 1);
+    }
+
+    // check three cells below
+    if (index < (prevCells.length - width) - 1) {
+        indexs.push(index + width);
+        if (!leftEdge) indexs.push((index + width) - 1);
+        if (!rightEdge) indexs.push((index + width) + 1);
+    }
+
+    // find the amount of neigbours
+    const neighbours = indexs.filter(i => (prevCells[i].cellStatus !== cellStatus.DEAD)).length;
+
+    // return new state depending on amount of neighbours
+    if ((currentState !== cellStatus.DEAD && neighbours > 3) || neighbours < 2) {
+        return cellStatus.DEAD;
+    } else if (currentState === cellStatus.DEAD && neighbours === 3) {
+        return cellStatus.YOUNG;
+    } else if (currentState !== cellStatus.DEAD) {
+        return cellStatus.OLD;
+    } else {
+        return cellStatus.DEAD;
+    }
+}
+
 class App extends Component<{}, State> {
     public state: State = {
         boardSize: 1600,
         cells: [],
         paused: false,
         counter: 0,
-        delay: 400
+        delay: 400,
     }
 
     componentDidMount() {
@@ -47,49 +86,9 @@ class App extends Component<{}, State> {
         let { counter } = this.state;
         counter++;
 
-        function checkNeighbours(index: number, currentState: number): number {
-            const width = 40;
-            const leftEdge = index % width === 0;
-            const rightEdge = (index + 1) % width === 0;
-            let indexs = [];
-
-            // check either sides
-            if (!leftEdge) indexs.push(index - 1);
-            if (!rightEdge) indexs.push(index + 1);
-
-            // check three cells above
-            if (index > width - 1) {
-                indexs.push(index - width);
-                if (!leftEdge) indexs.push((index - width) - 1);
-                if (!rightEdge) indexs.push((index - width) + 1);
-            }
-
-            // check three cells below
-            if (index < (prevCells.length - width) - 1) {
-                indexs.push(index + width);
-                if (!leftEdge) indexs.push((index + width) - 1);
-                if (!rightEdge) indexs.push((index + width) + 1);
-            }
-
-            // find the amount of neigbours
-            const neighbours = indexs.filter(i => (prevCells[i].cellStatus !== cellStatus.DEAD)).length;
-
-            // return new state depending on amount of neighbours
-            if ((currentState !== cellStatus.DEAD && neighbours > 3) || neighbours < 2) {
-                return cellStatus.DEAD;
-            } else if (currentState === cellStatus.DEAD && neighbours === 3) {
-                return cellStatus.YOUNG;
-            } else if (currentState !== cellStatus.DEAD) {
-                return cellStatus.OLD;
-            } else {
-                return cellStatus.DEAD;
-            }
-
-        }
-
         // Create new array of cells
         const cells = this.state.cells.map((cell) => {
-            return { ...cell, cellStatus: checkNeighbours(cell.id, cell.cellStatus) }
+            return { ...cell, cellStatus: checkNeighbours(cell.id, cell.cellStatus, prevCells) }
         });
 
         this.setState({ cells, counter });
