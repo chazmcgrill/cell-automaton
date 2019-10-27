@@ -1,7 +1,7 @@
 {
     "extends": [
-        "react-app",
-        "eslint:recommended"
+        "eslint:recommended",
+        "react-app"
     ],
     "rules": {
         "indent": "off",

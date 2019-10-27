@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cell } from '../App';
+import { Cell } from '../types';
 
 enum CellKey {
     'dead-cell',
