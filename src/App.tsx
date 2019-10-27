@@ -14,7 +14,7 @@ export interface Cell {
     id: number;
 }
 
-interface State {
+interface AppState {
     boardSize: number,
     cells: Cell[],
     paused: boolean,
@@ -61,8 +61,8 @@ function checkNeighbours(index: number, currentState: number, prevCells: Cell[])
     }
 }
 
-class App extends Component<{}, State> {
-    public state: State = {
+class App extends Component<{}, AppState> {
+    public state: AppState = {
         boardSize: 1600,
         cells: [],
         paused: false,
@@ -108,20 +108,6 @@ class App extends Component<{}, State> {
         this.setState({ cells });
     }
 
-    handleReset = () => {
-        const resetFunc = () => {
-            this.initialStatus();
-            this.setState({ counter: 0 });
-        }
-
-        if (!this.state.paused) {
-            this.setState({ paused: true });
-            setTimeout(() => resetFunc(), 400);
-        } else {
-            resetFunc();
-        }
-    }
-
     handleSpeedChange = (delay: number) => {
         if (!this.state.paused) {
             this.setState({ paused: true });
@@ -133,21 +119,34 @@ class App extends Component<{}, State> {
         }
     }
 
-    handleResume = () => {
-        if (this.state.paused) {
-            this.setState({ paused: false });
-        }
-    }
-
-    handleCellClick = (id: number) => {
+    handleCellClick = (id: number): void => {
         let cells = this.state.cells.slice();
         cells[id].cellStatus = cells[id].cellStatus === cellStatus.YOUNG ? cellStatus.DEAD : cellStatus.YOUNG;
         this.setState({ cells });
     }
 
-    handleClear = () => {
-        const cells = this.newCells();
-        this.setState({ cells, paused: true, counter: 0 });
+    handleResume = (): void => {
+        if (this.state.paused) {
+            this.setState({ paused: false });
+        }
+    }
+
+    handleClear = (): void => this.setState({ cells: this.newCells(), paused: true, counter: 0 });
+
+    handlePause = (): void => this.setState({ paused: true });
+
+    handleReset = (): void => {
+        const resetFunc = () => {
+            this.initialStatus();
+            this.setState({ counter: 0 });
+        }
+
+        if (!this.state.paused) {
+            this.setState({ paused: true });
+            setTimeout(() => resetFunc(), 400);
+        } else {
+            resetFunc();
+        }
     }
 
     render() {
@@ -163,7 +162,7 @@ class App extends Component<{}, State> {
 
                 <Controls
                     onPlay={this.handleResume}
-                    onPause={() => this.setState({ paused: true })}
+                    onPause={this.handlePause}
                     onClear={this.handleClear}
                     onReset={this.handleReset}
                 />

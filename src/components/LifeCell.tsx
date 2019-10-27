@@ -7,12 +7,12 @@ enum CellKey {
     'old-cell'
 }
 
-interface Props {
+interface LifeCellProps {
     cell: Cell;
-    clickCell: any;
+    clickCell: (id: number) => void;
 }
 
-const LifeCell = (props: Props) => {
+const LifeCell = (props: LifeCellProps) => {
     const { cellStatus, id } = props.cell;
     const cellStyle = CellKey[cellStatus];
 

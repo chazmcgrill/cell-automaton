@@ -1,13 +1,13 @@
 import React from 'react';
 
-interface Props {
-  onPlay: any;
-  onPause: any;
-  onClear: any;
-  onReset: any;
+interface ControlsProps {
+    onPlay: () => void;
+    onPause: () => void;
+    onClear: () => void;
+    onReset: () => void;
 }
 
-const Controls = (props: Props) => (
+const Controls = (props: ControlsProps) => (
     <div className="control-buttons">
         <button onClick={props.onPlay}>Resume</button>
         <button onClick={props.onPause}>Pause</button>
