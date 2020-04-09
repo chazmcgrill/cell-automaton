@@ -16,7 +16,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "echo \"Add tests please.\"",
+    "testwatch": "react-scripts test",
     "eject": "react-scripts eject",
     "preversion": "npm test",
     "version": "git add .",
