@@ -1,12 +1,13 @@
 # Cell Automaton
 
+[![CircleCI](https://circleci.com/gh/chazmcgrill/cell-automaton/tree/master.svg?style=svg)](https://circleci.com/gh/chazmcgrill/cell-automaton/tree/master)
 [![GitHub Release](https://img.shields.io/github/v/release/chazmcgrill/cell-automaton)](https://github.com/chazmcgrill/cell-automaton/releases)
 [![PR's Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com)
 [![Twitter Follow](https://img.shields.io/twitter/follow/charlietcoder.svg?style=social)](https://twitter.com/charlietcoder)
 
 Project based on the cellular automaton [Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) devised by mathematician John Conway, built using React.
 
-View project [here](https://codepen.io/chazmcgrill/full/QOoOaj/)
+View project [here](https://cell-automaton.charlietaylorcoder.com/)
 
 #### Tech Stack
 - [React](https://reactjs.org/)
