@@ -1,4 +1,4 @@
-import { CELL_STATUS, CONFIG } from './globals';
+import { CELL_STATUS, CONFIG } from '../config';
 import { Cell } from './types';
 
 export function generateNewBoard(): Cell[] {

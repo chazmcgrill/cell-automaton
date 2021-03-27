@@ -1,6 +1,6 @@
 import React from 'react';
 import LifeCell from './LifeCell';
-import { Cell } from '../types';
+import { Cell } from '../utils/types';
 
 interface LifeBoardProps {
     cells: Cell[];

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import Controls from './components/Controls';
-import LifeBoard from './components/LifeBoard';
-import SpeedControls from './components/SpeedControls';
-import { generateNewBoard, initializeCellStatus, getNewCellStatus } from './helpers';
-import { CELL_STATUS } from './globals';
-import { Cell } from './types';
+import Controls from './Controls';
+import LifeBoard from './LifeBoard';
+import SpeedControls from './SpeedControls';
+import { generateNewBoard, initializeCellStatus, getNewCellStatus } from '../utils/helpers';
+import { CELL_STATUS } from '../config';
+import { Cell } from '../utils/types';
 
 interface AppState {
     cells: Cell[],
