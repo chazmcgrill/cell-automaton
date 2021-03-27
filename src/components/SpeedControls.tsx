@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 
 interface SpeedControlProps {
     handleSpeedChange: (delay: number) => void;
@@ -27,4 +27,4 @@ const SpeedControls = ({
     )
 }
 
-export default SpeedControls;
+export default memo(SpeedControls);

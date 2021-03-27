@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 interface ControlsProps {
     onPlay: () => void;
@@ -16,4 +16,4 @@ const Controls = (props: ControlsProps) => (
     </div>
 )
 
-export default Controls;
+export default memo(Controls);

@@ -10,7 +10,7 @@ interface LifeBoardProps {
 const LifeBoard = (props: LifeBoardProps) => (
     <div className="life-board">
         {props.cells.map((cell, i) => (
-            <LifeCell key={i} cell={cell} clickCell={props.clickCell} />
+            <LifeCell key={i} id={cell.id} cellStatus={cell.cellStatus}  clickCell={props.clickCell} />
         ))}
     </div>
 );
