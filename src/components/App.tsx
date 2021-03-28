@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Controls from './Controls';
 import LifeBoard from './LifeBoard';
 import SpeedControls from './SpeedControls';
@@ -12,6 +12,8 @@ const App = () => {
     const [paused, setPaused] = useState(false);
     const [delay, setDelay] = useState(400);
 
+    const lifecycleInterval = useRef<NodeJS.Timeout>();
+
     const cellsLifecycle = useCallback((): void => {
         setCells(currentCells => currentCells.map((cell) => ({
             ...cell,
@@ -21,57 +23,51 @@ const App = () => {
     }, []);
 
     useEffect(() => {
-        if (!paused && counter !== undefined) setTimeout(cellsLifecycle, delay);
-    }, [counter, cellsLifecycle, paused, delay]);
-
-    useEffect(() => {
         const cells = generateNewBoard();
         setCells(initializeCellStatus(cells));
-        cellsLifecycle();
+        lifecycleInterval.current = setInterval(cellsLifecycle, 400);
     }, [cellsLifecycle]);
 
     const handleSpeedChange = (newDelay: number) => {
         if (!paused) {
-            setPaused(true);
-            setTimeout(() => {
-                setPaused(false);
-                setDelay(newDelay);
-            }, 400);
-        } else {
-            setDelay(newDelay);
+            if (lifecycleInterval.current) clearInterval(lifecycleInterval.current);
+            lifecycleInterval.current = setInterval(cellsLifecycle, newDelay);
         }
+        setDelay(newDelay);
     }
 
-    const handleCellClick = (id: number): void => {
-        const currentCells = cells.slice();
-        currentCells[id].cellStatus = cells[id].cellStatus === CELL_STATUS.YOUNG ? CELL_STATUS.DEAD : CELL_STATUS.YOUNG;
-        setCells(currentCells);
-    }
+    const handleCellClick = useCallback((id: number): void => {
+        setCells(currentCells => currentCells.map(cell => (
+            cell.id === id ? {
+                ...cell,
+                cellStatus: cell.cellStatus === CELL_STATUS.YOUNG ? CELL_STATUS.DEAD : CELL_STATUS.YOUNG,
+            } : cell
+        )));
+    }, []);
 
     const handleResume = (): void => {
-        if (paused) setPaused(false);
+        if (paused) {
+            lifecycleInterval.current = setInterval(cellsLifecycle, delay);
+            setPaused(false);
+        }
+    }
+    
+    const handlePause = (): void => {
+        if (lifecycleInterval.current) clearInterval(lifecycleInterval.current);
+        setPaused(true);
     }
 
     const handleClear = (): void => {
+        handlePause();
         setCells(generateNewBoard());
-        setPaused(true);
-        setCounter(0);
     }
 
-    const handlePause = (): void => setPaused(true);
-
     const handleReset = (): void => {
-        const resetFunc = () =>{
-            setCells(initializeCellStatus(cells));
-            setCounter(0);
-        }
-
-        if (!paused) {
-            setPaused(true);
-            setTimeout(() => resetFunc(), 400);
-        } else {
-            resetFunc();
-        }
+        if (lifecycleInterval.current) clearInterval(lifecycleInterval.current);
+        setCounter(0);
+        const cells = generateNewBoard();
+        setCells(initializeCellStatus(cells));
+        lifecycleInterval.current = setInterval(cellsLifecycle, 400);
     }
 
     return (
