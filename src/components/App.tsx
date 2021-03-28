@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Controls from './Controls';
 import LifeBoard from './LifeBoard';
 import SpeedControls from './SpeedControls';
@@ -6,105 +6,97 @@ import { generateNewBoard, initializeCellStatus, getNewCellStatus } from '../uti
 import { CELL_STATUS } from '../config';
 import { Cell } from '../utils/types';
 
-interface AppState {
-    cells: Cell[],
-    paused: boolean,
-    counter: number,
-    delay: number
-}
+const App = () => {
+    const [cells, setCells] = useState<Cell[]>([]);
+    const [counter, setCounter] = useState(0);
+    const [paused, setPaused] = useState(false);
+    const [delay, setDelay] = useState(400);
 
-class App extends Component<{}, AppState> {
-    public state: AppState = {
-        cells: [],
-        paused: false,
-        counter: 0,
-        delay: 400,
-    }
-
-    componentDidMount() {
-        const cells = generateNewBoard();
-        this.setState({ cells: initializeCellStatus(cells) });
-    }
-
-    lifecycleTimer = (delay: number): void => {
-        if (!this.state.paused) setTimeout(this.cellsLifecycle, delay);
-    }
-
-    cellsLifecycle = (): void => {
-        const currentCells = this.state.cells.slice();
-        const { counter, cells } = this.state;
-        const newCells = cells.map((cell) => ({
+    const cellsLifecycle = useCallback((): void => {
+        setCells(currentCells => currentCells.map((cell) => ({
             ...cell,
             cellStatus: getNewCellStatus(cell.id, cell.cellStatus, currentCells),
-        }));
+        })));
+        setCounter(currentCount => currentCount + 1);
+    }, []);
 
-        this.setState({ cells: newCells, counter: counter + 1 });
-    }
+    useEffect(() => {
+        if (!paused && counter !== undefined) setTimeout(cellsLifecycle, delay);
+    }, [counter, cellsLifecycle, paused, delay]);
 
-    handleSpeedChange = (delay: number) => {
-        if (!this.state.paused) {
-            this.setState({ paused: true });
+    useEffect(() => {
+        const cells = generateNewBoard();
+        setCells(initializeCellStatus(cells));
+        cellsLifecycle();
+    }, [cellsLifecycle]);
+
+    const handleSpeedChange = (newDelay: number) => {
+        if (!paused) {
+            setPaused(true);
             setTimeout(() => {
-                this.setState({ paused: false, delay });
+                setPaused(false);
+                setDelay(newDelay);
             }, 400);
         } else {
-            this.setState({ delay });
+            setDelay(newDelay);
         }
     }
 
-    handleCellClick = (id: number): void => {
-        const cells = this.state.cells.slice();
-        cells[id].cellStatus = cells[id].cellStatus === CELL_STATUS.YOUNG ? CELL_STATUS.DEAD : CELL_STATUS.YOUNG;
-        this.setState({ cells });
+    const handleCellClick = (id: number): void => {
+        const currentCells = cells.slice();
+        currentCells[id].cellStatus = cells[id].cellStatus === CELL_STATUS.YOUNG ? CELL_STATUS.DEAD : CELL_STATUS.YOUNG;
+        setCells(currentCells);
     }
 
-    handleResume = (): void => {
-        if (this.state.paused) this.setState({ paused: false });
+    const handleResume = (): void => {
+        if (paused) setPaused(false);
     }
 
-    handleClear = (): void => this.setState({ cells: generateNewBoard(), paused: true, counter: 0 });
+    const handleClear = (): void => {
+        setCells(generateNewBoard());
+        setPaused(true);
+        setCounter(0);
+    }
 
-    handlePause = (): void => this.setState({ paused: true });
+    const handlePause = (): void => setPaused(true);
 
-    handleReset = (): void => {
-        const resetFunc = () => this.setState({ cells: initializeCellStatus(this.state.cells), counter: 0 });
+    const handleReset = (): void => {
+        const resetFunc = () =>{
+            setCells(initializeCellStatus(cells));
+            setCounter(0);
+        }
 
-        if (!this.state.paused) {
-            this.setState({ paused: true });
+        if (!paused) {
+            setPaused(true);
             setTimeout(() => resetFunc(), 400);
         } else {
             resetFunc();
         }
     }
 
-    render() {
-        const { cells, counter, delay } = this.state;
+    return (
+        <div>
+            <header>
+                <h1>Life</h1>
+            </header>
 
-        this.lifecycleTimer(delay);
+            <Controls
+                onPlay={handleResume}
+                onPause={handlePause}
+                onClear={handleClear}
+                onReset={handleReset}
+            />
 
-        return (
-            <div>
-                <header>
-                    <h1>Life</h1>
-                </header>
+            {cells.length > 0 && <LifeBoard cells={cells} clickCell={handleCellClick} />}
 
-                <Controls
-                    onPlay={this.handleResume}
-                    onPause={this.handlePause}
-                    onClear={this.handleClear}
-                    onReset={this.handleReset}
-                />
+            <p>Cell Lifecycles: {counter}</p>
 
-                {cells.length > 0 && <LifeBoard cells={cells} clickCell={this.handleCellClick} />}
+            <SpeedControls handleSpeedChange={handleSpeedChange} />
 
-                <p>Cell Lifecycles: {counter}</p>
+            <p className="footer">coded by <a href="https://www.charlietaylorcoder.com">charlie taylor</a></p>
+        </div>
+    )
 
-                <SpeedControls handleSpeedChange={this.handleSpeedChange} />
-                
-                <p className="footer">coded by <a href="https://www.charlietaylorcoder.com">charlie taylor</a></p>
-            </div>
-        )
-    }
 }
 
 export default App;
