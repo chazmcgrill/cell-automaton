@@ -1,37 +1,50 @@
 import React, { memo } from 'react';
+import { BASE_INTERVAL_MS, SPEED_MULTIPLIERS } from '../config';
 
 interface SpeedButtonProps extends Pick<SpeedControlProps, 'handleSpeedChange'> {
     label: string;
-    isCurrentSpeed: boolean;
+    isActive: boolean;
     speed: number;
 }
 
 const SpeedButton = memo(({
     handleSpeedChange,
     label,
-    isCurrentSpeed,
+    isActive,
     speed,
 }: SpeedButtonProps) => {
-    const backgroundColor = isCurrentSpeed ? "#6C49B8" : "#29cacf";
+    const backgroundColor = isActive ? "#6C49B8" : "#29cacf";
     return (
-        <button onClick={() => handleSpeedChange(speed)} style={{ backgroundColor }}>{label}</button>
+        <button
+            disabled={isActive}
+            onClick={() => handleSpeedChange(speed)}
+            style={{ backgroundColor }}
+        >{label}</button>
     );
 })
 
 interface SpeedControlProps {
     handleSpeedChange: (delay: number) => void;
-    currentSpeed: number;
+    currentIntervalMs: number;
 }
 
 const SpeedControls = ({
     handleSpeedChange,
-    currentSpeed,
+    currentIntervalMs,
 }: SpeedControlProps) => {
     return (
         <div className="control-buttons">
-            <SpeedButton label="X1" speed={400} handleSpeedChange={handleSpeedChange} isCurrentSpeed={currentSpeed === 400} />
-            <SpeedButton label="X2" speed={200} handleSpeedChange={handleSpeedChange} isCurrentSpeed={currentSpeed === 200} />
-            <SpeedButton label="X5" speed={40} handleSpeedChange={handleSpeedChange} isCurrentSpeed={currentSpeed === 40} />
+            {SPEED_MULTIPLIERS.map(multiplier => {
+                const intervalMs = BASE_INTERVAL_MS / multiplier
+                return (
+                    <SpeedButton
+                        label={`X${multiplier}`}
+                        speed={intervalMs}
+                        handleSpeedChange={handleSpeedChange}
+                        isActive={currentIntervalMs === intervalMs}
+                    />
+                )
+            })}
         </div>
     )
 }

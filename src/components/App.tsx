@@ -3,16 +3,16 @@ import Controls from './Controls';
 import LifeBoard from './LifeBoard';
 import SpeedControls from './SpeedControls';
 import { generateNewBoard, initializeCellStatus, getNewCellStatus } from '../utils/helpers';
-import { CELL_STATUS } from '../config';
+import { BASE_INTERVAL_MS, CELL_STATUS } from '../config';
 import { Cell } from '../utils/types';
 
 const App = () => {
     const [cells, setCells] = useState<Cell[]>([]);
     const [counter, setCounter] = useState(0);
     const [paused, setPaused] = useState(false);
-    const [delay, setDelay] = useState(400);
+    const [intervalMs, setIntervalMs] = useState(BASE_INTERVAL_MS);
 
-    const lifecycleInterval = useRef<NodeJS.Timeout>();
+    const intervalRef = useRef<NodeJS.Timeout>();
 
     const cellsLifecycle = useCallback((): void => {
         setCells(currentCells => currentCells.map((cell) => ({
@@ -25,15 +25,15 @@ const App = () => {
     useEffect(() => {
         const cells = generateNewBoard();
         setCells(initializeCellStatus(cells));
-        lifecycleInterval.current = setInterval(cellsLifecycle, 400);
+        intervalRef.current = setInterval(cellsLifecycle, BASE_INTERVAL_MS);
     }, [cellsLifecycle]);
 
     const handleSpeedChange = (newDelay: number) => {
         if (!paused) {
-            if (lifecycleInterval.current) clearInterval(lifecycleInterval.current);
-            lifecycleInterval.current = setInterval(cellsLifecycle, newDelay);
+            if (intervalRef.current) clearInterval(intervalRef.current);
+            intervalRef.current = setInterval(cellsLifecycle, newDelay);
         }
-        setDelay(newDelay);
+        setIntervalMs(newDelay);
     }
 
     const handleCellClick = useCallback((id: number): void => {
@@ -47,13 +47,13 @@ const App = () => {
 
     const handleResume = (): void => {
         if (paused) {
-            lifecycleInterval.current = setInterval(cellsLifecycle, delay);
+            intervalRef.current = setInterval(cellsLifecycle, intervalMs);
             setPaused(false);
         }
     }
     
     const handlePause = (): void => {
-        if (lifecycleInterval.current) clearInterval(lifecycleInterval.current);
+        if (intervalRef.current) clearInterval(intervalRef.current);
         setPaused(true);
     }
 
@@ -63,11 +63,11 @@ const App = () => {
     }
 
     const handleReset = (): void => {
-        if (lifecycleInterval.current) clearInterval(lifecycleInterval.current);
+        if (intervalRef.current) clearInterval(intervalRef.current);
         setCounter(0);
         const cells = generateNewBoard();
         setCells(initializeCellStatus(cells));
-        lifecycleInterval.current = setInterval(cellsLifecycle, 400);
+        intervalRef.current = setInterval(cellsLifecycle, BASE_INTERVAL_MS);
     }
 
     return (
@@ -87,7 +87,7 @@ const App = () => {
 
             <p>Cell Lifecycles: {counter}</p>
 
-            <SpeedControls handleSpeedChange={handleSpeedChange} currentSpeed={delay} />
+            <SpeedControls handleSpeedChange={handleSpeedChange} currentIntervalMs={intervalMs} />
 
             <p className="footer">coded by <a href="https://www.charlietaylorcoder.com">charlie taylor</a></p>
         </div>
