@@ -87,7 +87,7 @@ const App = () => {
 
             <p>Cell Lifecycles: {counter}</p>
 
-            <SpeedControls handleSpeedChange={handleSpeedChange} />
+            <SpeedControls handleSpeedChange={handleSpeedChange} currentSpeed={delay} />
 
             <p className="footer">coded by <a href="https://www.charlietaylorcoder.com">charlie taylor</a></p>
         </div>
