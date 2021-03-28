@@ -8,7 +8,7 @@ export const CELL_STATUS = {
     OLD: 2,
 }
 
-/** Base interval between cell lifecyles */
+/** Base interval between cell life cycles */
 export const BASE_INTERVAL_MS = 400; // 0.4 seconds
 
 /** Life cycle interval speed multipliers */

@@ -9,12 +9,12 @@ import { Cell } from '../utils/types';
 const App = () => {
     const [cells, setCells] = useState<Cell[]>([]);
     const [counter, setCounter] = useState(0);
-    const [paused, setPaused] = useState(false);
+    const [isPaused, setIsPaused] = useState(false);
     const [intervalMs, setIntervalMs] = useState(BASE_INTERVAL_MS);
 
     const intervalRef = useRef<NodeJS.Timeout>();
 
-    const cellsLifecycle = useCallback((): void => {
+    const cellsLifeCycle = useCallback((): void => {
         setCells(currentCells => currentCells.map((cell) => ({
             ...cell,
             cellStatus: getNewCellStatus(cell.id, cell.cellStatus, currentCells),
@@ -22,16 +22,23 @@ const App = () => {
         setCounter(currentCount => currentCount + 1);
     }, []);
 
-    useEffect(() => {
+    const handleReset = useCallback((): void => {
+        if (intervalRef.current) clearInterval(intervalRef.current);
         const cells = generateNewBoard();
+        setCounter(0);
+        setIntervalMs(BASE_INTERVAL_MS);
         setCells(initializeCellStatus(cells));
-        intervalRef.current = setInterval(cellsLifecycle, BASE_INTERVAL_MS);
-    }, [cellsLifecycle]);
+        intervalRef.current = setInterval(cellsLifeCycle, BASE_INTERVAL_MS);
+    }, [cellsLifeCycle]);
+
+    useEffect(() => {
+        handleReset();
+    }, [cellsLifeCycle, handleReset]);
 
     const handleSpeedChange = (newDelay: number) => {
-        if (!paused) {
+        if (!isPaused) {
             if (intervalRef.current) clearInterval(intervalRef.current);
-            intervalRef.current = setInterval(cellsLifecycle, newDelay);
+            intervalRef.current = setInterval(cellsLifeCycle, newDelay);
         }
         setIntervalMs(newDelay);
     }
@@ -46,28 +53,20 @@ const App = () => {
     }, []);
 
     const handleResume = (): void => {
-        if (paused) {
-            intervalRef.current = setInterval(cellsLifecycle, intervalMs);
-            setPaused(false);
+        if (isPaused) {
+            intervalRef.current = setInterval(cellsLifeCycle, intervalMs);
+            setIsPaused(false);
         }
     }
     
     const handlePause = (): void => {
         if (intervalRef.current) clearInterval(intervalRef.current);
-        setPaused(true);
+        setIsPaused(true);
     }
 
     const handleClear = (): void => {
         handlePause();
         setCells(generateNewBoard());
-    }
-
-    const handleReset = (): void => {
-        if (intervalRef.current) clearInterval(intervalRef.current);
-        setCounter(0);
-        const cells = generateNewBoard();
-        setCells(initializeCellStatus(cells));
-        intervalRef.current = setInterval(cellsLifecycle, BASE_INTERVAL_MS);
     }
 
     return (
