@@ -25,6 +25,7 @@ const App = () => {
         if (!isInitial) {
             setCounter(0);
             setIntervalMs(BASE_INTERVAL_MS);
+            setIsPaused(false);
         }
 
         setCells(initializeCellStatus(cells));
