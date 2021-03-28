@@ -38,6 +38,7 @@ const SpeedControls = ({
                 const intervalMs = BASE_INTERVAL_MS / multiplier
                 return (
                     <SpeedButton
+                        key={multiplier}
                         label={`X${multiplier}`}
                         speed={intervalMs}
                         handleSpeedChange={handleSpeedChange}
