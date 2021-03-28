@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Controls from './Controls';
 import LifeBoard from './LifeBoard';
 import SpeedControls from './SpeedControls';
-import { generateNewBoard, initializeCellStatus, getNewCellStatus } from '../utils/helpers';
+import { generateNewBoard, initializeCellStatus, getNextCellsLifeCycle } from '../utils';
 import { BASE_INTERVAL_MS, CELL_STATUS } from '../config';
 import { Cell } from '../utils/types';
 
@@ -15,25 +15,21 @@ const App = () => {
     const intervalRef = useRef<NodeJS.Timeout>();
 
     const cellsLifeCycle = useCallback((): void => {
-        setCells(currentCells => currentCells.map((cell) => ({
-            ...cell,
-            cellStatus: getNewCellStatus(cell.id, cell.cellStatus, currentCells),
-        })));
-        setCounter(currentCount => currentCount + 1);
+        setCells(getNextCellsLifeCycle);
     }, []);
 
-    const handleReset = useCallback((): void => {
+    const handleResetCells = useCallback((isInitial?: boolean): void => {
         if (intervalRef.current) clearInterval(intervalRef.current);
         const cells = generateNewBoard();
-        setCounter(0);
-        setIntervalMs(BASE_INTERVAL_MS);
+
+        if (!isInitial) {
+            setCounter(0);
+            setIntervalMs(BASE_INTERVAL_MS);
+        }
+
         setCells(initializeCellStatus(cells));
         intervalRef.current = setInterval(cellsLifeCycle, BASE_INTERVAL_MS);
     }, [cellsLifeCycle]);
-
-    useEffect(() => {
-        handleReset();
-    }, [cellsLifeCycle, handleReset]);
 
     const handleSpeedChange = (newDelay: number) => {
         if (!isPaused) {
@@ -69,6 +65,14 @@ const App = () => {
         setCells(generateNewBoard());
     }
 
+    useEffect(() => {
+        setCounter(currentCount => currentCount + 1);
+    }, [cells]);
+
+    useEffect(() => {
+        handleResetCells(true);
+    }, [cellsLifeCycle, handleResetCells]);
+
     return (
         <div>
             <header>
@@ -79,7 +83,7 @@ const App = () => {
                 onPlay={handleResume}
                 onPause={handlePause}
                 onClear={handleClear}
-                onReset={handleReset}
+                onReset={handleResetCells}
             />
 
             {cells.length > 0 && <LifeBoard cells={cells} clickCell={handleCellClick} />}

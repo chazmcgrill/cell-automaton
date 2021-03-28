@@ -1,16 +1,31 @@
 import { CELL_STATUS, CONFIG } from '../config';
 import { Cell } from './types';
 
+/**
+ * Generates a new array of cells
+ * @returns new cell array
+ */
 export function generateNewBoard(): Cell[] {
     return Array.apply(null, Array(CONFIG.boardSize)).map((cell, index) => {
         return { id: index, cellStatus: CELL_STATUS.DEAD }
     })
 }
 
+/**
+ * Initializes new cell array with randomised cell status'
+ * @param cells new cell array
+ */
 export function initializeCellStatus(cells: Cell[]): Cell[] {
     return cells.map(cell => ({ ...cell, cellStatus: Math.floor(Math.random() * 2) }));
 }
 
+/**
+ * Checks cells neighbours and return updated cell status
+ * @param index array index
+ * @param currentState current cell state
+ * @param prevCells current cell array
+ * @returns updated cell status
+ */
 export function getNewCellStatus(index: number, currentState: number, prevCells: Cell[]): number {
     const width = 40;
     const leftEdge = index % width === 0;
@@ -48,4 +63,22 @@ export function getNewCellStatus(index: number, currentState: number, prevCells:
     } else {
         return CELL_STATUS.DEAD;
     }
+}
+
+/**
+ * Gets next cell life cycle 
+ * @param cells current cells array
+ * @returns array of updated cells if nothing has changed original array is returned to prevent mutation
+ */
+export const getNextCellsLifeCycle = (cells: Cell[]) => {
+    let cellsHaveChanged = false;
+    const updatedCells = cells.map((cell) => {
+        const newCellStatus = getNewCellStatus(cell.id, cell.cellStatus, cells);
+        if (newCellStatus !== cell.cellStatus) cellsHaveChanged = true;
+        return {
+            ...cell,
+            cellStatus: newCellStatus,
+        }
+    });
+    return cellsHaveChanged ? updatedCells : cells;
 }
