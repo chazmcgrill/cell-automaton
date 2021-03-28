@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 interface ControlsProps {
     onPlay: () => void;
@@ -12,8 +12,8 @@ const Controls = (props: ControlsProps) => (
         <button onClick={props.onPlay}>Resume</button>
         <button onClick={props.onPause}>Pause</button>
         <button onClick={props.onClear}>Clear</button>
-        <button onClick={props.onReset}>Reset</button>
+        <button onClick={() => props.onReset()}>Reset</button>
     </div>
 )
 
-export default Controls;
+export default memo(Controls);

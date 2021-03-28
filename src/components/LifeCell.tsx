@@ -1,5 +1,5 @@
-import React from 'react';
-import { Cell } from '../types';
+import React, { memo } from 'react';
+import { Cell } from '../utils/types';
 
 enum CellKey {
     'dead-cell',
@@ -7,16 +7,13 @@ enum CellKey {
     'old-cell'
 }
 
-interface LifeCellProps {
-    cell: Cell;
+interface LifeCellProps extends Cell {
     clickCell: (id: number) => void;
 }
 
-const LifeCell = (props: LifeCellProps) => {
-    const { cellStatus, id } = props.cell;
+const LifeCell = ({ cellStatus, id, clickCell } : LifeCellProps) => {
     const cellStyle = CellKey[cellStatus];
-
-    return <div className={`life-cell ${cellStyle}`} onClick={() => props.clickCell(id)} />
+    return <div className={`life-cell ${cellStyle}`} onClick={() => clickCell(id)} />
 }
 
-export default LifeCell
+export default memo(LifeCell)

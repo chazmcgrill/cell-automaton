@@ -1,30 +1,52 @@
-import React, { useState } from 'react';
+import React, { memo } from 'react';
+import { BASE_INTERVAL_MS, SPEED_MULTIPLIERS } from '../config';
+
+interface SpeedButtonProps extends Pick<SpeedControlProps, 'handleSpeedChange'> {
+    label: string;
+    isActive: boolean;
+    speed: number;
+}
+
+const SpeedButton = memo(({
+    handleSpeedChange,
+    label,
+    isActive,
+    speed,
+}: SpeedButtonProps) => {
+    const backgroundColor = isActive ? "#6C49B8" : "#29cacf";
+    return (
+        <button
+            disabled={isActive}
+            onClick={() => handleSpeedChange(speed)}
+            style={{ backgroundColor }}
+        >{label}</button>
+    );
+})
 
 interface SpeedControlProps {
     handleSpeedChange: (delay: number) => void;
+    currentIntervalMs: number;
 }
 
 const SpeedControls = ({
     handleSpeedChange,
+    currentIntervalMs,
 }: SpeedControlProps) => {
-    const [activeButton, setActiveButton] = useState('400');
-
-    const toggleSpeedChange = (speed: string): void => {
-        if (activeButton !== speed) {
-            setActiveButton(speed)
-            handleSpeedChange(parseInt(speed, 10))
-        }
-    }
-
-    const bgStyle = (value: string) => (value === activeButton ? "#6C49B8" : "#29cacf");
-
     return (
         <div className="control-buttons">
-            <button onClick={() => toggleSpeedChange('400')} style={{ backgroundColor: bgStyle("400") }}>X1</button>
-            <button onClick={() => toggleSpeedChange('200')} style={{ backgroundColor: bgStyle("200") }}>X2</button>
-            <button onClick={() => toggleSpeedChange('40')} style={{ backgroundColor: bgStyle("40") }}>X5</button>
+            {SPEED_MULTIPLIERS.map(multiplier => {
+                const intervalMs = BASE_INTERVAL_MS / multiplier
+                return (
+                    <SpeedButton
+                        label={`X${multiplier}`}
+                        speed={intervalMs}
+                        handleSpeedChange={handleSpeedChange}
+                        isActive={currentIntervalMs === intervalMs}
+                    />
+                )
+            })}
         </div>
     )
 }
 
-export default SpeedControls;
+export default memo(SpeedControls);
