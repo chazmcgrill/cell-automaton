@@ -1,0 +1,26 @@
+@mixin button-base
+    font-size: 1rem
+    cursor: pointer
+    outline: none
+    border-style: none
+    border-radius: 3px
+    padding: 0.5rem 1rem
+    margin: 0 0.5rem
+    transition: background-color 0.3s
+
+.button
+    &-default
+        @include button-base
+        background-color: #EFEEEA
+        color: #241C15
+
+        &:hover
+            background-color: darken(#EFEEEA, 10%)
+
+    &-primary
+        @include button-base
+        background-color: $accent
+        color: $white
+
+        &:hover
+            background-color: darken($accent, 10%)

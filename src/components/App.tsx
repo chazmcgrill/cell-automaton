@@ -48,18 +48,24 @@ const App = () => {
         )));
     }, []);
 
-    const handleResume = useCallback((): void => {
-        if (isPaused) {
-            intervalRef.current = setInterval(cellsLifeCycle, intervalMs);
-            setIsPaused(false);
-        }
-    }, [isPaused, intervalMs, cellsLifeCycle]);
-    
     const handlePause = useCallback((): void => {
         if (intervalRef.current) clearInterval(intervalRef.current);
         setIsPaused(true);
     }, []);
 
+    const handlePlay = useCallback((): void => {
+        intervalRef.current = setInterval(cellsLifeCycle, intervalMs);
+        setIsPaused(false);
+    }, [intervalMs, cellsLifeCycle]);
+
+    const toggleLifeCycle = useCallback((): void => {
+        if (isPaused) {
+            handlePlay();
+            return;
+        } 
+        handlePause();
+    }, [handlePause, isPaused, handlePlay]);
+    
     const handleClear = useCallback((): void => {
         handlePause();
         setCells(generateNewBoard());
@@ -76,12 +82,12 @@ const App = () => {
     return (
         <div>
             <Header
-                onPlay={handleResume}
-                onPause={handlePause}
+                toggleLifeCycle={toggleLifeCycle}
                 onClear={handleClear}
                 onReset={handleResetCells}
                 handleSpeedChange={handleSpeedChange}
                 intervalMs={intervalMs}
+                isPaused={isPaused}
             />
 
             {cells.length > 0 && <LifeBoard cells={cells} clickCell={handleCellClick} />}

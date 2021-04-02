@@ -1,18 +1,18 @@
 import React, { memo } from 'react';
+import Button from './ui/Button';
 
 interface ControlsProps {
     onPlay: () => void;
-    onPause: () => void;
     onClear: () => void;
     onReset: () => void;
+    isPaused: boolean;
 }
 
 const Controls = (props: ControlsProps) => (
     <div className="control-buttons">
-        <button className="button" onClick={props.onPlay}>Resume</button>
-        <button className="button" onClick={props.onPause}>Pause</button>
-        <button className="button" onClick={props.onClear}>Clear</button>
-        <button className="button" onClick={() => props.onReset()}>Reset</button>
+        <Button onClick={props.onPlay} label={props.isPaused ? 'Run' : 'Pause'} priority="primary" />
+        <Button onClick={props.onClear} label="Clear" />
+        <Button onClick={props.onReset} label="Reset" />
     </div>
 )
 

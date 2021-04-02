@@ -1,11 +1,5 @@
 import React, { memo } from 'react';
-
-export type ButtonValue = number | string;
-
-export interface ButtonItem<T extends ButtonValue> {
-    value: T;
-    label: string;
-}
+import { ButtonItem, ButtonValue } from './types';
 
 interface ButtonProps<T extends ButtonValue> {
     label: string;
@@ -14,19 +8,19 @@ interface ButtonProps<T extends ButtonValue> {
     onClick: (value: T) => void;
 }
 
-function Button<T extends ButtonValue>({
+function GroupButton<T extends ButtonValue>({
     onClick,
     label,
     isActive,
     value,
 }: ButtonProps<T>) {
-    const backgroundColor = isActive ? "#6C49B8" : "#29cacf";
+    // const backgroundColor = isActive ? "#6C49B8" : "#29cacf";
     return (
         <button
             disabled={isActive}
             onClick={() => onClick(value)}
-            style={{ backgroundColor }}
-            className="group-button"
+            // style={{ backgroundColor }}
+            className={`group-button ${isActive ? 'active' : 'inactive'}`}
         >
             {label}
         </button>
@@ -44,7 +38,7 @@ function ButtonGroup<T extends ButtonValue>({ buttonItems, onClickButton, select
     return (
         <div className="button-group">
             {buttonItems.map(item => (
-                <Button
+                <GroupButton
                     key={`${item.value}`}
                     label={item.label}
                     value={item.value}
