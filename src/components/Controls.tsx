@@ -9,10 +9,10 @@ interface ControlsProps {
 
 const Controls = (props: ControlsProps) => (
     <div className="control-buttons">
-        <button onClick={props.onPlay}>Resume</button>
-        <button onClick={props.onPause}>Pause</button>
-        <button onClick={props.onClear}>Clear</button>
-        <button onClick={() => props.onReset()}>Reset</button>
+        <button className="button" onClick={props.onPlay}>Resume</button>
+        <button className="button" onClick={props.onPause}>Pause</button>
+        <button className="button" onClick={props.onClear}>Clear</button>
+        <button className="button" onClick={() => props.onReset()}>Reset</button>
     </div>
 )
 

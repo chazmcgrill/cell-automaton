@@ -1,15 +1,21 @@
 import React, { memo } from 'react';
+import { BASE_INTERVAL_MS, SPEED_MULTIPLIERS } from '../config';
 import Controls from './Controls';
-import SpeedControls from './SpeedControls';
+import ButtonGroup, { ButtonItem } from './ui/ButtonGroup';
 
 interface HeaderProps {
     onPlay: () => void;
     onPause: () => void;
     onClear: () => void;
     onReset: () => void;
-    handleSpeedChange: (delay: number) => void;
+    handleSpeedChange: (value: number) => void;
     intervalMs: number;
 }
+
+const SPEED_BUTTON_ITEMS = SPEED_MULTIPLIERS.map(multiplier => ({
+    value: BASE_INTERVAL_MS / multiplier,
+    label: `X${multiplier}`,
+})) as ButtonItem<number>[];
 
 const Header = ({
     onPlay,
@@ -30,7 +36,13 @@ const Header = ({
                     onClear={onClear}
                     onReset={onReset}
                 />
-                <SpeedControls handleSpeedChange={handleSpeedChange} currentIntervalMs={intervalMs} />
+                <ButtonGroup
+                    buttonItems={SPEED_BUTTON_ITEMS}
+                    selectedValue={intervalMs}
+                    // @ts-ignore
+                    onClickButton={handleSpeedChange} 
+                />
+                {/* <SpeedControls handleSpeedChange={handleSpeedChange} currentIntervalMs={intervalMs} /> */}
             </div>
         </header>
     );
