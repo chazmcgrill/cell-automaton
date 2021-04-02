@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import Controls from './Controls';
 import LifeBoard from './LifeBoard';
-import SpeedControls from './SpeedControls';
 import { generateNewBoard, initializeCellStatus, getNextCellsLifeCycle } from '../utils';
 import { BASE_INTERVAL_MS, CELL_STATUS } from '../config';
 import { Cell } from '../utils/types';
+import Header from './Header';
 
 const App = () => {
     const [cells, setCells] = useState<Cell[]>([]);
@@ -32,13 +31,13 @@ const App = () => {
         intervalRef.current = setInterval(cellsLifeCycle, BASE_INTERVAL_MS);
     }, [cellsLifeCycle]);
 
-    const handleSpeedChange = (newDelay: number) => {
+    const handleSpeedChange = useCallback((newDelay: number) => {
         if (!isPaused) {
             if (intervalRef.current) clearInterval(intervalRef.current);
             intervalRef.current = setInterval(cellsLifeCycle, newDelay);
         }
         setIntervalMs(newDelay);
-    }
+    }, [cellsLifeCycle, isPaused]);
 
     const handleCellClick = useCallback((id: number): void => {
         setCells(currentCells => currentCells.map(cell => (
@@ -49,22 +48,22 @@ const App = () => {
         )));
     }, []);
 
-    const handleResume = (): void => {
+    const handleResume = useCallback((): void => {
         if (isPaused) {
             intervalRef.current = setInterval(cellsLifeCycle, intervalMs);
             setIsPaused(false);
         }
-    }
+    }, [isPaused, intervalMs, cellsLifeCycle]);
     
-    const handlePause = (): void => {
+    const handlePause = useCallback((): void => {
         if (intervalRef.current) clearInterval(intervalRef.current);
         setIsPaused(true);
-    }
+    }, []);
 
-    const handleClear = (): void => {
+    const handleClear = useCallback((): void => {
         handlePause();
         setCells(generateNewBoard());
-    }
+    }, [handlePause]);
 
     useEffect(() => {
         setCounter(currentCount => currentCount + 1);
@@ -76,22 +75,18 @@ const App = () => {
 
     return (
         <div>
-            <header>
-                <h1>Life</h1>
-            </header>
-
-            <Controls
+            <Header
                 onPlay={handleResume}
                 onPause={handlePause}
                 onClear={handleClear}
                 onReset={handleResetCells}
+                handleSpeedChange={handleSpeedChange}
+                intervalMs={intervalMs}
             />
 
             {cells.length > 0 && <LifeBoard cells={cells} clickCell={handleCellClick} />}
 
             <p>Cell Lifecycles: {counter}</p>
-
-            <SpeedControls handleSpeedChange={handleSpeedChange} currentIntervalMs={intervalMs} />
 
             <p className="footer">coded by <a href="https://www.charlietaylorcoder.com">charlie taylor</a></p>
         </div>
