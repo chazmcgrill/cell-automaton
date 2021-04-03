@@ -3,8 +3,14 @@ import { darken, lighten } from 'polished';
 import styled from 'styled-components';
 import { ButtonItem, ButtonValue } from './types';
 
+interface ButtonGroupProps<T extends ButtonValue> {
+    onClickButton: (value: T) => void;
+    buttonItems: ButtonItem<T>[];
+    selectedValue: T;
+}
+
 const GroupButton = styled.button<{ isActive: boolean }>`
-    color: black;
+    color: #333;
     border-style: none;
     padding: calc(0.5rem - 2px) calc(1rem - 2px);
     cursor: pointer;
@@ -31,12 +37,6 @@ const GroupButton = styled.button<{ isActive: boolean }>`
         border-right: 1px solid #BDBBB9;
     }
 `
-
-interface ButtonGroupProps<T extends ButtonValue> {
-    onClickButton: (value: T) => void;
-    buttonItems: ButtonItem<T>[];
-    selectedValue: T;
-}
 
 const ButtonGroup = <T extends ButtonValue, >({ 
     buttonItems, 

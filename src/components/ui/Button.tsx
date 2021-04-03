@@ -27,7 +27,7 @@ const StyledButton = styled.button<{ priority: ButtonPriority }>`
     &:hover {
         background-color: ${props => darken(0.1, props.priority === 'primary' ? '#29cacf' : '#EFEEEA')}
     }
-`
+`;
 
 const Button = <T extends ButtonValue, >({
     onClick,
