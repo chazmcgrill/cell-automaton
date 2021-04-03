@@ -74,11 +74,14 @@ export const getNextCellsLifeCycle = (cells: Cell[], cellsHorizontalCount: numbe
     let cellsHaveChanged = false;
     const updatedCells = cells.map((cell) => {
         const newCellStatus = getNewCellStatus(cell.id, cell.cellStatus, cells, cellsHorizontalCount);
-        if (newCellStatus !== cell.cellStatus) cellsHaveChanged = true;
-        return {
-            ...cell,
-            cellStatus: newCellStatus,
+        if (newCellStatus !== cell.cellStatus) {
+            cellsHaveChanged = true;
+            return {
+                ...cell,
+                cellStatus: newCellStatus,
+            }
         }
+        return cell;
     });
     return cellsHaveChanged ? updatedCells : cells;
 }
