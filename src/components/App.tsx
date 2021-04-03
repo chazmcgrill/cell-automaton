@@ -7,7 +7,7 @@ import Header from './Header';
 
 function getCellCount() {
     const { innerWidth: width, innerHeight: height } = window;
-    const horizontalCellCount = Math.floor((width - 2 * 20)  / 10);
+    const horizontalCellCount = Math.floor((width - 2 * 32)  / 10);
     const verticalCellCount = Math.floor((height - 100) / 10);
     const totalCellCount = horizontalCellCount * verticalCellCount;
     return {
@@ -31,8 +31,6 @@ const App = () => {
 
     const handleResetCells = useCallback((isInitial?: boolean): void => {
         if (intervalRef.current) clearInterval(intervalRef.current);
-        // const cellCount = getCellCount()
-        console.log('cellCount', cellCount);
         const cells = generateNewBoard(cellCount.totalCellCount);
 
         if (!isInitial) {
@@ -108,8 +106,6 @@ const App = () => {
             <div className="board-wrapper">
                 {cells.length > 0 && <LifeBoard cells={cells} clickCell={handleCellClick} />}
             </div>
-
-            <p className="footer">coded by <a href="https://www.charlietaylorcoder.com">charlie taylor</a></p>
         </div>
     )
 
