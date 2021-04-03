@@ -82,3 +82,20 @@ export const getNextCellsLifeCycle = (cells: Cell[], cellsHorizontalCount: numbe
     });
     return cellsHaveChanged ? updatedCells : cells;
 }
+
+/**
+ * Splits array in to chunks of specified size
+ * @param chunkSize size of chunk to split array by
+ * @param arr array to split into chunks
+ */
+export const chunkArray = <T,>(chunkSize: number, arr: T[]) => {
+    return arr.reduce((resultArray: T[][], item, index) => {
+        const chunkIndex = Math.floor(index / chunkSize);
+
+        if (!resultArray[chunkIndex]) resultArray[chunkIndex] = [] as T[];
+
+        resultArray[chunkIndex].push(item)
+
+        return resultArray
+    }, []);
+}
