@@ -1,12 +1,12 @@
-import { CELL_STATUS, CONFIG } from '../config';
+import { CELL_STATUS } from '../config';
 import { Cell } from './types';
 
 /**
  * Generates a new array of cells
  * @returns new cell array
  */
-export function generateNewBoard(): Cell[] {
-    return Array.apply(null, Array(CONFIG.boardSize)).map((cell, index) => {
+export function generateNewBoard(cellCount?: number): Cell[] {
+    return Array.apply(null, Array(cellCount)).map((cell, index) => {
         return { id: index, cellStatus: CELL_STATUS.DEAD }
     })
 }
@@ -26,8 +26,8 @@ export function initializeCellStatus(cells: Cell[]): Cell[] {
  * @param prevCells current cell array
  * @returns updated cell status
  */
-export function getNewCellStatus(index: number, currentState: number, prevCells: Cell[]): number {
-    const width = 40;
+export function getNewCellStatus(index: number, currentState: number, prevCells: Cell[], cellsHorizontalCount: number): number {
+    const width = cellsHorizontalCount;
     const leftEdge = index % width === 0;
     const rightEdge = (index + 1) % width === 0;
     let indexs = [];
@@ -70,10 +70,10 @@ export function getNewCellStatus(index: number, currentState: number, prevCells:
  * @param cells current cells array
  * @returns array of updated cells if nothing has changed original array is returned to prevent mutation
  */
-export const getNextCellsLifeCycle = (cells: Cell[]) => {
+export const getNextCellsLifeCycle = (cells: Cell[], cellsHorizontalCount: number) => {
     let cellsHaveChanged = false;
     const updatedCells = cells.map((cell) => {
-        const newCellStatus = getNewCellStatus(cell.id, cell.cellStatus, cells);
+        const newCellStatus = getNewCellStatus(cell.id, cell.cellStatus, cells, cellsHorizontalCount);
         if (newCellStatus !== cell.cellStatus) cellsHaveChanged = true;
         return {
             ...cell,

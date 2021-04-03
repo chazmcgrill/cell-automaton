@@ -5,8 +5,20 @@ import { BASE_INTERVAL_MS, CELL_STATUS } from '../config';
 import { Cell } from '../utils/types';
 import Header from './Header';
 
+function getCellCount() {
+    const { innerWidth: width, innerHeight: height } = window;
+    const horizontalCellCount = Math.floor((width - 2 * 20)  / 10);
+    const verticalCellCount = Math.floor((height - 100) / 10);
+    const totalCellCount = horizontalCellCount * verticalCellCount;
+    return {
+        horizontalCellCount,
+        totalCellCount,
+    };
+}
+
 const App = () => {
     const [cells, setCells] = useState<Cell[]>([]);
+    const [cellCount] = useState(getCellCount());
     const [counter, setCounter] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
     const [intervalMs, setIntervalMs] = useState(BASE_INTERVAL_MS);
@@ -14,12 +26,14 @@ const App = () => {
     const intervalRef = useRef<NodeJS.Timeout>();
 
     const cellsLifeCycle = useCallback((): void => {
-        setCells(getNextCellsLifeCycle);
-    }, []);
+        setCells(currentCells => getNextCellsLifeCycle(currentCells, cellCount.horizontalCellCount));
+    }, [cellCount]);
 
     const handleResetCells = useCallback((isInitial?: boolean): void => {
         if (intervalRef.current) clearInterval(intervalRef.current);
-        const cells = generateNewBoard();
+        // const cellCount = getCellCount()
+        console.log('cellCount', cellCount);
+        const cells = generateNewBoard(cellCount.totalCellCount);
 
         if (!isInitial) {
             setCounter(0);
@@ -29,7 +43,7 @@ const App = () => {
 
         setCells(initializeCellStatus(cells));
         intervalRef.current = setInterval(cellsLifeCycle, BASE_INTERVAL_MS);
-    }, [cellsLifeCycle]);
+    }, [cellsLifeCycle, cellCount]);
 
     const handleSpeedChange = useCallback((newDelay: number) => {
         if (!isPaused) {
@@ -68,8 +82,8 @@ const App = () => {
     
     const handleClear = useCallback((): void => {
         handlePause();
-        setCells(generateNewBoard());
-    }, [handlePause]);
+        setCells(generateNewBoard(cellCount.totalCellCount));
+    }, [handlePause, cellCount]);
 
     useEffect(() => {
         setCounter(currentCount => currentCount + 1);
@@ -88,11 +102,12 @@ const App = () => {
                 handleSpeedChange={handleSpeedChange}
                 intervalMs={intervalMs}
                 isPaused={isPaused}
+                lifeCycleCount={counter}
             />
 
-            {cells.length > 0 && <LifeBoard cells={cells} clickCell={handleCellClick} />}
-
-            <p>Cell Lifecycles: {counter}</p>
+            <div className="board-wrapper">
+                {cells.length > 0 && <LifeBoard cells={cells} clickCell={handleCellClick} />}
+            </div>
 
             <p className="footer">coded by <a href="https://www.charlietaylorcoder.com">charlie taylor</a></p>
         </div>

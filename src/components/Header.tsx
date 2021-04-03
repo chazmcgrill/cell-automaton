@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { BASE_INTERVAL_MS, SPEED_MULTIPLIERS } from '../config';
 import Controls from './Controls';
 import ButtonGroup from './ui/ButtonGroup';
+import Stat from './ui/Stat';
 import { ButtonItem } from './ui/types';
 
 interface HeaderProps {
@@ -11,6 +12,7 @@ interface HeaderProps {
     handleSpeedChange: (value: number) => void;
     intervalMs: number;
     isPaused: boolean;
+    lifeCycleCount: number;
 }
 
 const SPEED_BUTTON_ITEMS = SPEED_MULTIPLIERS.map(multiplier => ({
@@ -25,10 +27,13 @@ const Header = ({
     onReset,
     handleSpeedChange,
     intervalMs,
+    lifeCycleCount,
 }: HeaderProps): JSX.Element => (
     <header>
         <h2>Cell Automaton</h2>
         <div className="row">
+            <Stat label="Life cycles" value={lifeCycleCount} />
+            
             <Controls
                 onPlay={toggleLifeCycle}
                 onClear={onClear}

@@ -7,19 +7,35 @@ $grey: #ddd
 
 html
     font-family: 'Roboto', sans-serif
-    font-size: 16px
+    font-size: 14px
     letter-spacing: 0.2px
     height: 100%
     color: $text
+    overflow: hidden
 
 body
-    background: $grey
     margin: 0
 
-@import 'css/App'
+h1
+    font-size: 2.5rem
+    letter-spacing: 0.1rem
+    margin: 0
+
+p, span, button
+    font-size: 1rem
+
+.footer
+    font-size: 11px
+    padding: 20px
+
+.row
+    display: flex
+    align-items: center
+
 @import 'css/Header'
 @import 'css/Controls'
 @import 'css/LifeBoard'
 @import 'css/LifeCell'
 @import 'components/ui/styles/ButtonGroup'
 @import 'components/ui/styles/Button'
+@import 'components/ui/styles/Stat'
