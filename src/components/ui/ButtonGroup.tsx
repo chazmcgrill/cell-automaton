@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { darken, lighten } from 'polished';
+import { lighten } from 'polished';
 import styled from 'styled-components';
 import { ButtonItem, ButtonValue } from './types';
 
@@ -10,7 +10,7 @@ interface ButtonGroupProps<T extends ButtonValue> {
 }
 
 const GroupButton = styled.button<{ isActive: boolean }>`
-    color: #333;
+    color: ${({ theme }) => theme.colors.black};
     border-style: none;
     padding: calc(0.5rem - 2px) calc(1rem - 2px);
     cursor: pointer;
@@ -19,10 +19,10 @@ const GroupButton = styled.button<{ isActive: boolean }>`
     border-top: 1px solid #BDBBB9;
     border-bottom: 1px solid #BDBBB9;
     border-right: 1px solid #BDBBB9;
-    background-color: ${props => props.isActive ? '#CCE5E7' : '#fff'};
+    background-color: ${({ theme, isActive }) => isActive ? lighten(0.3, theme.colors.primary) : theme.colors.white};
 
     &:hover {
-        background-color: ${props => props.isActive ? darken(0.05, '#CCE5E7') : lighten(0.10, '#CCE5E7')}
+        background-color: ${({ theme, isActive }) => isActive ? lighten(0.2, theme.colors.primary) : lighten(0.45, theme.colors.primary) }
     }
 
     &:first-child {

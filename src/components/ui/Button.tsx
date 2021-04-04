@@ -21,11 +21,11 @@ const StyledButton = styled.button<{ priority: ButtonPriority }>`
     margin: 0 0.5rem;
     transition: background-color 0.3s;
     cursor: pointer;
-    background-color: ${props => props.priority === 'primary' ? '#29cacf' : '#EFEEEA'};
-    color: ${props => props.priority === 'primary' ? '#fff' : '#241C15'};
+    background-color: ${({ priority, theme }) => priority === 'primary' ? theme.colors.primary : theme.colors.default};
+    color: ${({ priority, theme }) => priority === 'primary' ? theme.colors.white : theme.colors.black};
 
     &:hover {
-        background-color: ${props => darken(0.1, props.priority === 'primary' ? '#29cacf' : '#EFEEEA')}
+        background-color: ${({ priority, theme }) => darken(0.1, priority === 'primary' ? theme.colors.primary : theme.colors.default)}
     }
 `;
 

@@ -4,6 +4,7 @@ import { generateNewBoard, initializeCellStatus, getNextCellsLifeCycle } from '.
 import { BASE_INTERVAL_MS, CELL_STATUS } from '../config';
 import { Cell } from '../utils/types';
 import Header from './Header';
+import { ThemeProvider } from './ui/theme';
 
 function getCellCount() {
     const { innerWidth: width, innerHeight: height } = window;
@@ -92,7 +93,7 @@ const App = () => {
     }, [cellsLifeCycle, handleResetCells]);
 
     return (
-        <div>
+        <ThemeProvider>
             <Header
                 toggleLifeCycle={toggleLifeCycle}
                 onClear={handleClear}
@@ -106,7 +107,7 @@ const App = () => {
             <div className="board-wrapper">
                 {cells.length > 0 && <LifeBoard cells={cells} clickCell={handleCellClick} />}
             </div>
-        </div>
+        </ThemeProvider>
     )
 
 }
