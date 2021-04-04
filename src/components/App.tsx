@@ -6,10 +6,14 @@ import { Cell } from '../utils/types';
 import Header from './Header';
 import { ThemeProvider } from './ui/theme';
 
-function getCellCount() {
-    const { innerWidth: width, innerHeight: height } = window;
-    const horizontalCellCount = Math.floor((width - 2 * 32)  / 10);
-    const verticalCellCount = Math.floor((height - 100) / 10);
+interface BoardDimensions {
+    width: number;
+    height: number;
+}
+
+function getCellCount(boardDimensions: BoardDimensions) {
+    const horizontalCellCount = Math.floor(boardDimensions.width / 10);
+    const verticalCellCount = Math.floor(boardDimensions.height / 10);
     const totalCellCount = horizontalCellCount * verticalCellCount;
     return {
         horizontalCellCount,
@@ -19,20 +23,25 @@ function getCellCount() {
 
 const App = () => {
     const [cells, setCells] = useState<Cell[]>([]);
-    const [cellCount] = useState(getCellCount());
     const [counter, setCounter] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
     const [intervalMs, setIntervalMs] = useState(BASE_INTERVAL_MS);
+    const [boardDimensions, setBoardDimensions] = useState<BoardDimensions | undefined>();
 
+    const boardElementRef = useRef<HTMLDivElement>(null);
     const intervalRef = useRef<NodeJS.Timeout>();
 
     const cellsLifeCycle = useCallback((): void => {
-        setCells(currentCells => getNextCellsLifeCycle(currentCells, cellCount.horizontalCellCount));
-    }, [cellCount]);
+        if (!boardDimensions) return;
+        const { horizontalCellCount } = getCellCount(boardDimensions);
+        setCells(currentCells => getNextCellsLifeCycle(currentCells, horizontalCellCount));
+    }, [boardDimensions]);
 
     const handleResetCells = useCallback((isInitial?: boolean): void => {
         if (intervalRef.current) clearInterval(intervalRef.current);
-        const cells = generateNewBoard(cellCount.totalCellCount);
+        if (!boardDimensions) return;
+        const { totalCellCount } = getCellCount(boardDimensions);
+        const cells = generateNewBoard(totalCellCount);
 
         if (!isInitial) {
             setCounter(0);
@@ -42,7 +51,7 @@ const App = () => {
 
         setCells(initializeCellStatus(cells));
         intervalRef.current = setInterval(cellsLifeCycle, BASE_INTERVAL_MS);
-    }, [cellsLifeCycle, cellCount]);
+    }, [cellsLifeCycle, boardDimensions]);
 
     const handleSpeedChange = useCallback((newDelay: number) => {
         if (!isPaused) {
@@ -81,16 +90,25 @@ const App = () => {
     
     const handleClear = useCallback((): void => {
         handlePause();
-        setCells(generateNewBoard(cellCount.totalCellCount));
-    }, [handlePause, cellCount]);
+        if (!boardDimensions) return;
+        const { totalCellCount } = getCellCount(boardDimensions);
+        setCells(generateNewBoard(totalCellCount));
+    }, [handlePause, boardDimensions]);
 
     useEffect(() => {
         setCounter(currentCount => currentCount + 1);
     }, [cells]);
 
     useEffect(() => {
-        handleResetCells(true);
-    }, [cellsLifeCycle, handleResetCells]);
+        if (boardDimensions) handleResetCells(true);
+    }, [boardDimensions, cellsLifeCycle, handleResetCells]);
+
+    useEffect(() => {
+        if (boardElementRef.current) {
+            const { clientWidth: width, clientHeight: height } = boardElementRef.current;
+            setBoardDimensions({ width, height });
+        }
+    }, []);
 
     return (
         <ThemeProvider>
@@ -104,7 +122,7 @@ const App = () => {
                 lifeCycleCount={counter}
             />
 
-            <div className="board-wrapper">
+            <div className="board-wrapper" ref={boardElementRef} style={boardDimensions}>
                 {cells.length > 0 && <LifeBoard cells={cells} clickCell={handleCellClick} />}
             </div>
         </ThemeProvider>
