@@ -103,13 +103,24 @@ export const chunkArray = <T,>(chunkSize: number, arr: T[]) => {
     }, []);
 }
 
+const HEADER_HEIGHT = 70;
+const FOOTER_HEIGHT = 30;
+const MOBILE_FOOTER_HEIGHT = 50;
+
+const viewportMargins = () => {
+    const { innerWidth } = window;
+    return HEADER_HEIGHT + (innerWidth <= 800 ? MOBILE_FOOTER_HEIGHT : FOOTER_HEIGHT);
+}
+
+
 /**
  * Gets the amount of cells that can fit on the screen horizontally and in total 
  * @param boardDimensions the width and height of the board element in pixels
  */
 export const getCellCount = (boardDimensions: BoardDimensions) => {
     const horizontalCellCount = Math.floor(boardDimensions.width / 10);
-    const verticalCellCount = Math.floor(boardDimensions.height / 10);
+    const { innerHeight } = window;
+    const verticalCellCount = Math.floor((innerHeight - viewportMargins()) / 10);
     const totalCellCount = horizontalCellCount * verticalCellCount;
     return {
         horizontalCellCount,

@@ -23,6 +23,8 @@ const StyledButton = styled.button<{ priority: ButtonPriority }>`
     cursor: pointer;
     background-color: ${({ priority, theme }) => priority === 'primary' ? theme.colors.primary : theme.colors.default};
     color: ${({ priority, theme }) => priority === 'primary' ? theme.colors.white : theme.colors.black};
+    background-color: red;
+    color: ${({ priority, theme }) => priority === 'primary' ? theme.colors.white : theme.colors.black};
 
     &:hover {
         background-color: ${({ priority, theme }) => darken(0.1, priority === 'primary' ? theme.colors.primary : theme.colors.default)}
