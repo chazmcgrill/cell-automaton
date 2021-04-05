@@ -123,14 +123,14 @@ const App = () => {
             </div>
 
             {isMobile && (
-                <div className="mobile-section">
+                <footer className="mobile-section">
                     <Controls
                         onPlay={toggleLifeCycle}
                         onClear={handleClear}
                         onReset={handleResetCells}
                         isPaused={isPaused}
                     />
-                </div> 
+                </footer> 
             )}
         </ThemeProvider>
     )
