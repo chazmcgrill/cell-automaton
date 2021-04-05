@@ -5,6 +5,10 @@ import { BASE_INTERVAL_MS, CELL_STATUS } from '../config';
 import { BoardDimensions, Cell } from '../utils/types';
 import Header from './Header';
 import { ThemeProvider } from './ui/theme';
+import Controls from './Controls';
+import Heading from './ui/Heading';
+
+const { innerWidth: screenWidth } = window;
 
 const App = () => {
     const [cells, setCells] = useState<Cell[]>([]);
@@ -97,19 +101,37 @@ const App = () => {
 
     return (
         <ThemeProvider>
-            <Header
-                toggleLifeCycle={toggleLifeCycle}
-                onClear={handleClear}
-                onReset={handleResetCells}
-                handleSpeedChange={handleSpeedChange}
-                intervalMs={intervalMs}
-                isPaused={isPaused}
-                lifeCycleCount={counter}
-            />
+            {screenWidth <= 800 ? (
+                <div className="mobile-header">
+                    <Heading importance={4}>Cell Automaton</Heading>
+                </div>
+            ) : (
+                <Header
+                    toggleLifeCycle={toggleLifeCycle}
+                    onClear={handleClear}
+                    onReset={handleResetCells}
+                    handleSpeedChange={handleSpeedChange}
+                    intervalMs={intervalMs}
+                    isPaused={isPaused}
+                    lifeCycleCount={counter}
+                />
+            )}
+            
 
             <div className="life-board" ref={boardElementRef} style={boardDimensions}>
                 {cells.length > 0 && <LifeBoard cells={cells} clickCell={handleCellClick} />}
             </div>
+
+            {screenWidth <= 800 && (
+                <div className="mobile-header">
+                    <Controls
+                        onPlay={toggleLifeCycle}
+                        onClear={handleClear}
+                        onReset={handleResetCells}
+                        isPaused={isPaused}
+                    />
+                </div> 
+            )}
         </ThemeProvider>
     )
 
