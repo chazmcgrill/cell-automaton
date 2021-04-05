@@ -13,6 +13,7 @@ View project [here](https://cell-automaton.charlietaylorcoder.com/)
 - [React](https://reactjs.org/)
 - [Typescript](https://www.typescriptlang.org/)
 - [Sass](https://sass-lang.com/)
+- [Styled-Components](https://styled-components.com/)
 
 #### To Run Locally
 

@@ -3,21 +3,37 @@ $text: #0f0f0f
 $white: #fff
 $grey: #ddd
 
-@import url('https://fonts.googleapis.com/css?family=Roboto')
+@import url('https://fonts.googleapis.com/css?family=Inter:400')
 
 html
-  font-family: 'Roboto', sans-serif
-  font-size: 20px
-  letter-spacing: 0.2px
-  height: 100%
-  color: $text
+    font-family: 'Inter', sans-serif
+    font-weight: 400
+    font-size: 15px
+    line-height: 1.75
+    letter-spacing: 0.2px
+    height: 100%
+    color: $text
+    overflow: hidden
+    background-color: #FFFAFA
 
 body
-  background: $grey
-  margin: 0
-  padding: 0 20px
+    margin: 0
 
-@import 'css/App'
+small, .text_small
+    font-size: 0.833rem
+
+p, span, button
+    font-size: 1rem
+
+.row
+    display: flex
+    align-items: center
+
+.mobile-section
+    padding: 1rem
+    text-align: center
+
+@import 'css/Header'
 @import 'css/Controls'
 @import 'css/LifeBoard'
 @import 'css/LifeCell'
