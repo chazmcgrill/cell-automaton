@@ -9,6 +9,7 @@ import Controls from './Controls';
 import Heading from './ui/Heading';
 
 const { innerWidth: screenWidth } = window;
+const isMobile = screenWidth <= 800;
 
 const App = () => {
     const [cells, setCells] = useState<Cell[]>([]);
@@ -101,8 +102,8 @@ const App = () => {
 
     return (
         <ThemeProvider>
-            {screenWidth <= 800 ? (
-                <div className="mobile-header">
+            {isMobile ? (
+                <div className="mobile-section">
                     <Heading importance={4}>Cell Automaton</Heading>
                 </div>
             ) : (
@@ -117,13 +118,12 @@ const App = () => {
                 />
             )}
             
-
             <div className="life-board" ref={boardElementRef} style={boardDimensions}>
                 {cells.length > 0 && <LifeBoard cells={cells} clickCell={handleCellClick} />}
             </div>
 
-            {screenWidth <= 800 && (
-                <div className="mobile-header">
+            {isMobile && (
+                <div className="mobile-section">
                     <Controls
                         onPlay={toggleLifeCycle}
                         onClear={handleClear}
