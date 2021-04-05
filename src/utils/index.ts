@@ -1,5 +1,5 @@
 import { CELL_STATUS } from '../config';
-import { Cell } from './types';
+import { BoardDimensions, Cell } from './types';
 
 /**
  * Generates a new array of cells
@@ -101,4 +101,18 @@ export const chunkArray = <T,>(chunkSize: number, arr: T[]) => {
 
         return resultArray
     }, []);
+}
+
+/**
+ * Gets the amount of cells that can fit on the screen horizontally and in total 
+ * @param boardDimensions the width and height of the board element in pixels
+ */
+export const getCellCount = (boardDimensions: BoardDimensions) => {
+    const horizontalCellCount = Math.floor(boardDimensions.width / 10);
+    const verticalCellCount = Math.floor(boardDimensions.height / 10);
+    const totalCellCount = horizontalCellCount * verticalCellCount;
+    return {
+        horizontalCellCount,
+        totalCellCount,
+    };
 }

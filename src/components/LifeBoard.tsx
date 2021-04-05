@@ -12,13 +12,13 @@ const LifeBoard = (props: LifeBoardProps) => {
     let chunkedCells = [props.cells];
 
     /* React doesn't like mapping over arrays of over 2000 in length
-       we can avoid this by chunking into smaller amounts */
+       we can avoid errors by chunking into smaller amounts */
     if (props.cells.length > 2000) {
         chunkedCells = chunkArray(2000, props.cells);
     }
 
     return (
-        <div className="life-board">
+        <>
             {chunkedCells.map(chunk => chunk.map((cell) => (
                 <LifeCell
                     key={cell.id}
@@ -27,7 +27,7 @@ const LifeBoard = (props: LifeBoardProps) => {
                     clickCell={props.clickCell}
                 />
             )))}
-        </div>
+        </>
     );
 }
 

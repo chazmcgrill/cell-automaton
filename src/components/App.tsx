@@ -1,25 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import LifeBoard from './LifeBoard';
-import { generateNewBoard, initializeCellStatus, getNextCellsLifeCycle } from '../utils';
+import { generateNewBoard, initializeCellStatus, getNextCellsLifeCycle, getCellCount } from '../utils';
 import { BASE_INTERVAL_MS, CELL_STATUS } from '../config';
-import { Cell } from '../utils/types';
+import { BoardDimensions, Cell } from '../utils/types';
 import Header from './Header';
 import { ThemeProvider } from './ui/theme';
-
-interface BoardDimensions {
-    width: number;
-    height: number;
-}
-
-function getCellCount(boardDimensions: BoardDimensions) {
-    const horizontalCellCount = Math.floor(boardDimensions.width / 10);
-    const verticalCellCount = Math.floor(boardDimensions.height / 10);
-    const totalCellCount = horizontalCellCount * verticalCellCount;
-    return {
-        horizontalCellCount,
-        totalCellCount,
-    };
-}
 
 const App = () => {
     const [cells, setCells] = useState<Cell[]>([]);
@@ -27,21 +12,20 @@ const App = () => {
     const [isPaused, setIsPaused] = useState(false);
     const [intervalMs, setIntervalMs] = useState(BASE_INTERVAL_MS);
     const [boardDimensions, setBoardDimensions] = useState<BoardDimensions | undefined>();
+    const [boardSize, setBoardSize] = useState<ReturnType<typeof getCellCount> | null>(null);
 
     const boardElementRef = useRef<HTMLDivElement>(null);
     const intervalRef = useRef<NodeJS.Timeout>();
 
     const cellsLifeCycle = useCallback((): void => {
-        if (!boardDimensions) return;
-        const { horizontalCellCount } = getCellCount(boardDimensions);
-        setCells(currentCells => getNextCellsLifeCycle(currentCells, horizontalCellCount));
-    }, [boardDimensions]);
+        if (!boardSize) return;
+        setCells(currentCells => getNextCellsLifeCycle(currentCells, boardSize.horizontalCellCount));
+    }, [boardSize]);
 
     const handleResetCells = useCallback((isInitial?: boolean): void => {
         if (intervalRef.current) clearInterval(intervalRef.current);
-        if (!boardDimensions) return;
-        const { totalCellCount } = getCellCount(boardDimensions);
-        const cells = generateNewBoard(totalCellCount);
+        if (!boardSize) return;
+        const cells = generateNewBoard(boardSize.totalCellCount);
 
         if (!isInitial) {
             setCounter(0);
@@ -51,7 +35,7 @@ const App = () => {
 
         setCells(initializeCellStatus(cells));
         intervalRef.current = setInterval(cellsLifeCycle, BASE_INTERVAL_MS);
-    }, [cellsLifeCycle, boardDimensions]);
+    }, [cellsLifeCycle, boardSize]);
 
     const handleSpeedChange = useCallback((newDelay: number) => {
         if (!isPaused) {
@@ -90,23 +74,24 @@ const App = () => {
     
     const handleClear = useCallback((): void => {
         handlePause();
-        if (!boardDimensions) return;
-        const { totalCellCount } = getCellCount(boardDimensions);
-        setCells(generateNewBoard(totalCellCount));
-    }, [handlePause, boardDimensions]);
+        if (!boardSize) return;
+        setCells(generateNewBoard(boardSize.totalCellCount));
+    }, [handlePause, boardSize]);
 
     useEffect(() => {
         setCounter(currentCount => currentCount + 1);
     }, [cells]);
 
     useEffect(() => {
-        if (boardDimensions) handleResetCells(true);
-    }, [boardDimensions, cellsLifeCycle, handleResetCells]);
+        if (boardSize) handleResetCells(true);
+    }, [boardSize, cellsLifeCycle, handleResetCells]);
 
     useEffect(() => {
         if (boardElementRef.current) {
             const { clientWidth: width, clientHeight: height } = boardElementRef.current;
-            setBoardDimensions({ width, height });
+            const newBoardDimensions = { width, height };
+            setBoardDimensions(newBoardDimensions);
+            setBoardSize(getCellCount(newBoardDimensions));
         }
     }, []);
 
@@ -122,7 +107,7 @@ const App = () => {
                 lifeCycleCount={counter}
             />
 
-            <div className="board-wrapper" ref={boardElementRef} style={boardDimensions}>
+            <div className="life-board" ref={boardElementRef} style={boardDimensions}>
                 {cells.length > 0 && <LifeBoard cells={cells} clickCell={handleCellClick} />}
             </div>
         </ThemeProvider>
