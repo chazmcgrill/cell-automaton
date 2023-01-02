@@ -1,19 +1,19 @@
 import React, { memo } from 'react';
 import { Cell } from '../utils/types';
 
-enum CellKey {
-    'dead-cell',
-    'young-cell',
-    'old-cell'
-}
+const cellStatusMap: { [key: number]: string } = {
+    0: 'dead-cell',
+    1: 'young-cell',
+    2: 'old-cell',
+};
 
 interface LifeCellProps extends Cell {
     clickCell: (id: number) => void;
 }
 
-const LifeCell = ({ cellStatus, id, clickCell } : LifeCellProps) => {
-    const cellStyle = CellKey[cellStatus];
-    return <div className={`life-cell ${cellStyle}`} onClick={() => clickCell(id)} />
-}
+const LifeCell = ({ cellStatus, id, clickCell }: LifeCellProps) => {
+    const cellStyle = cellStatusMap[cellStatus];
+    return <div className={`life-cell ${cellStyle}`} onClick={() => clickCell(id)} />;
+};
 
-export default memo(LifeCell)
+export default memo(LifeCell);
