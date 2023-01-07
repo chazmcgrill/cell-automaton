@@ -1,0 +1,26 @@
+$primary: #29CACF
+$default: #EFEEEA
+$white: #FFFFFF
+$black: #241C15
+
+.button
+    outline: none
+    border-style: none
+    border-radius: 3px
+    padding: 0.5rem 1rem
+    margin: 0 0.5rem
+    transition: background-color 0.3s
+    cursor: pointer
+    background-color: $default
+    color: $black
+    font-size: inherit
+    
+    &:hover
+        background-color: darken($default, 10%)
+
+.primary
+    background-color: $primary
+    color: $white
+
+    &:hover
+        background-color: darken($primary, 10%)
