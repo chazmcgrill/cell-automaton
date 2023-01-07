@@ -4,7 +4,6 @@ import { generateNewBoard, initializeCellStatus, getNextCellsLifeCycle, getCellC
 import { BASE_INTERVAL_MS, CELL_STATUS } from '../config';
 import { BoardDimensions, Cell } from '../utils/types';
 import Header from './Header';
-import { ThemeProvider } from './ui/theme';
 import Controls from './Controls';
 
 const { innerWidth: screenWidth } = window;
@@ -110,7 +109,7 @@ const App = () => {
     }, []);
 
     return (
-        <ThemeProvider>
+        <>
             {isMobile ? (
                 <div className="mobile-section">
                     <h1>Cell Automaton</h1>
@@ -136,7 +135,7 @@ const App = () => {
                     <Controls onPlay={toggleLifeCycle} onClear={handleClear} onReset={handleResetCells} isPaused={isPaused} />
                 </footer>
             )}
-        </ThemeProvider>
+        </>
     );
 };
 
