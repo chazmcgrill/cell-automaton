@@ -8,11 +8,11 @@ interface ControlsProps {
     isPaused: boolean;
 }
 
-const Controls = (props: ControlsProps) => (
+const Controls = ({ onPlay, onClear, onReset, isPaused }: ControlsProps) => (
     <div className="control-buttons">
-        <Button onClick={props.onPlay} label={props.isPaused ? 'Run' : 'Pause'} priority="primary" />
-        <Button onClick={props.onClear} label="Clear" />
-        <Button onClick={props.onReset} label="Reset" />
+        <Button onClick={onPlay} label={isPaused ? 'Run' : 'Pause'} priority="primary" />
+        <Button onClick={onClear} label="Clear" />
+        <Button onClick={onReset} label="Reset" />
     </div>
 );
 

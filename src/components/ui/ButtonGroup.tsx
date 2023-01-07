@@ -9,15 +9,20 @@ interface ButtonGroupProps<T extends ButtonValue> {
 
 const ButtonGroup = <T extends ButtonValue>({ buttonItems, onClickButton, selectedValue }: ButtonGroupProps<T>): JSX.Element => (
     <div className="button-group">
-        {buttonItems.map((item) => (
-            <span
-                key={`${item.value}`}
-                onClick={() => onClickButton(item.value)}
-                className={`button-group-item${selectedValue === item.value ? ' button-group-item-active' : ''}`}
-            >
-                {item.label}
-            </span>
-        ))}
+        {buttonItems.map((item) => {
+            const isItemActive = selectedValue === item.value;
+            return (
+                <button
+                    key={`${item.value}`}
+                    data-testid="button-group-button"
+                    onClick={() => onClickButton(item.value)}
+                    role={`${item.label}-button${isItemActive ? '-selected' : ''}`}
+                    className={`button-group-item${isItemActive ? ' button-group-item-active' : ''}`}
+                >
+                    {item.label}
+                </button>
+            );
+        })}
     </div>
 );
 

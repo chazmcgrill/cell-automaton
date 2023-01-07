@@ -13,7 +13,7 @@ interface LifeCellProps extends Cell {
 
 const LifeCell = ({ cellStatus, id, clickCell }: LifeCellProps) => {
     const cellStyle = cellStatusMap[cellStatus];
-    return <div data-testid="life-cell" className={`life-cell ${cellStyle}`} onClick={() => clickCell(id)} />;
+    return <div data-testid="life-cell" role={`togglable-${cellStyle}`} className={`life-cell ${cellStyle}`} onClick={() => clickCell(id)} />;
 };
 
 export default memo(LifeCell);
