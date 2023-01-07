@@ -5,6 +5,7 @@ import { BASE_INTERVAL_MS, CELL_STATUS } from '../config';
 import { BoardDimensions, Cell } from '../utils/types';
 import Header from './Header';
 import Controls from './Controls';
+import { ButtonValue } from './ui/types';
 
 const { innerWidth: screenWidth } = window;
 const isMobile = screenWidth <= 800;
@@ -44,12 +45,13 @@ const App = () => {
     );
 
     const handleSpeedChange = useCallback(
-        (newDelay: number) => {
+        (newDelay: ButtonValue) => {
+            const numberNewDelay = typeof newDelay === 'number' ? newDelay : parseInt(newDelay, 10);
             if (!isPaused) {
                 if (intervalRef.current) clearInterval(intervalRef.current);
-                intervalRef.current = setInterval(cellsLifeCycle, newDelay);
+                intervalRef.current = setInterval(cellsLifeCycle, numberNewDelay);
             }
-            setIntervalMs(newDelay);
+            setIntervalMs(numberNewDelay);
         },
         [cellsLifeCycle, isPaused],
     );

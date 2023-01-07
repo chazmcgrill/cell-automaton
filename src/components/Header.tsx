@@ -3,13 +3,13 @@ import { BASE_INTERVAL_MS, SPEED_MULTIPLIERS } from '../config';
 import Controls from './Controls';
 import ButtonGroup from './ui/ButtonGroup';
 import Stat from './ui/Stat';
-import { ButtonItem } from './ui/types';
+import { ButtonItem, ButtonValue } from './ui/types';
 
 interface HeaderProps {
     toggleLifeCycle: () => void;
     onClear: () => void;
     onReset: () => void;
-    handleSpeedChange: (value: number) => void;
+    handleSpeedChange: (value: ButtonValue) => void;
     intervalMs: number;
     isPaused: boolean;
     lifeCycleCount: number;
@@ -28,13 +28,7 @@ const Header = ({ toggleLifeCycle, isPaused, onClear, onReset, handleSpeedChange
             <Stat label="Life cycles" value={lifeCycleCount} />
 
             <Controls onPlay={toggleLifeCycle} onClear={onClear} onReset={onReset} isPaused={isPaused} />
-            <ButtonGroup
-                buttonItems={SPEED_BUTTON_ITEMS}
-                selectedValue={intervalMs}
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                onClickButton={handleSpeedChange}
-            />
+            <ButtonGroup buttonItems={SPEED_BUTTON_ITEMS} selectedValue={intervalMs} onClickButton={handleSpeedChange} />
         </div>
     </header>
 );
