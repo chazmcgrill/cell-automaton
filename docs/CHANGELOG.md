@@ -1,3 +1,10 @@
+## [2.1.1](https://github.com/chazmcgrill/cell-automaton/compare/v2.1.0...v2.1.1) (2023-01-07)
+
+
+### Bug Fixes
+
+* replaces tsignore for button types ([ac8276c](https://github.com/chazmcgrill/cell-automaton/commit/ac8276c1862524ac3ece2cdab27d40f6c683f9e7))
+
 # [2.1.0](https://github.com/chazmcgrill/cell-automaton/compare/v2.0.3...v2.1.0) (2023-01-07)
 
 
