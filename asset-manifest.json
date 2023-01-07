@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/cell-automaton/static/css/main.c5669b55.css",
-    "main.js": "/cell-automaton/static/js/main.151c9971.js",
+    "main.js": "/cell-automaton/static/js/main.ebcc3e97.js",
     "index.html": "/cell-automaton/index.html",
     "main.c5669b55.css.map": "/cell-automaton/static/css/main.c5669b55.css.map",
-    "main.151c9971.js.map": "/cell-automaton/static/js/main.151c9971.js.map"
+    "main.ebcc3e97.js.map": "/cell-automaton/static/js/main.ebcc3e97.js.map"
   },
   "entrypoints": [
     "static/css/main.c5669b55.css",
-    "static/js/main.151c9971.js"
+    "static/js/main.ebcc3e97.js"
   ]
 }
