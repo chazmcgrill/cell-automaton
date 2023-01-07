@@ -32,7 +32,6 @@ const Header = ({ toggleLifeCycle, isPaused, onClear, onReset, handleSpeedChange
             <ButtonGroup
                 buttonItems={SPEED_BUTTON_ITEMS}
                 selectedValue={intervalMs}
-                // TODO: fix this ts-ignore
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 onClickButton={handleSpeedChange}
