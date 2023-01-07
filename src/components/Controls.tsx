@@ -14,6 +14,6 @@ const Controls = (props: ControlsProps) => (
         <Button onClick={props.onClear} label="Clear" />
         <Button onClick={props.onReset} label="Reset" />
     </div>
-)
+);
 
 export default memo(Controls);

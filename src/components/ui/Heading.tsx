@@ -40,7 +40,7 @@ const headingComponents = {
     3: H3,
     4: H4,
     5: H5,
-}
+};
 
 interface HeadingProps {
     importance?: keyof typeof headingComponents;
@@ -51,11 +51,7 @@ interface HeadingProps {
 const Heading = ({ importance = 1, children: text, hasMargins }: HeadingProps): JSX.Element => {
     const HeadingComponent = headingComponents[importance];
 
-    return (
-        <HeadingComponent hasMargins={hasMargins}>
-            {text}
-        </HeadingComponent>
-    );
+    return <HeadingComponent hasMargins={hasMargins}>{text}</HeadingComponent>;
 };
 
 export default Heading;

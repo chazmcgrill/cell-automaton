@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { ThemeProvider as SCThemeProvider } from "styled-components";
+import { ThemeProvider as SCThemeProvider } from 'styled-components';
 
 export const defaultTheme = {
     colors: {
@@ -17,8 +17,4 @@ interface ThemeProviderProps {
     theme?: typeof defaultTheme;
 }
 
-export const ThemeProvider = ({ children, theme = defaultTheme }: ThemeProviderProps) => (
-    <SCThemeProvider theme={theme}>
-        {children}
-    </SCThemeProvider>
-);
+export const ThemeProvider = ({ children, theme = defaultTheme }: ThemeProviderProps) => <SCThemeProvider theme={theme}>{children}</SCThemeProvider>;
