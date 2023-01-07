@@ -19,16 +19,11 @@ const LifeBoard = (props: LifeBoardProps) => {
 
     return (
         <>
-            {chunkedCells.map(chunk => chunk.map((cell) => (
-                <LifeCell
-                    key={cell.id}
-                    id={cell.id}
-                    cellStatus={cell.cellStatus}
-                    clickCell={props.clickCell}
-                />
-            )))}
+            {chunkedCells.map((chunk) =>
+                chunk.map((cell) => <LifeCell key={cell.id} id={cell.id} cellStatus={cell.cellStatus} clickCell={props.clickCell} />),
+            )}
         </>
     );
-}
+};
 
 export default LifeBoard;

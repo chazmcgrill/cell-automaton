@@ -6,9 +6,9 @@ import { BoardDimensions, Cell } from './types';
  * @returns new cell array
  */
 export function generateNewBoard(cellCount?: number): Cell[] {
-    return Array.apply(null, Array(cellCount)).map((cell, index) => {
-        return { id: index, cellStatus: CELL_STATUS.DEAD }
-    })
+    return [...Array(cellCount)].map((cell, index) => {
+        return { id: index, cellStatus: CELL_STATUS.DEAD };
+    });
 }
 
 /**
@@ -16,7 +16,7 @@ export function generateNewBoard(cellCount?: number): Cell[] {
  * @param cells new cell array
  */
 export function initializeCellStatus(cells: Cell[]): Cell[] {
-    return cells.map(cell => ({ ...cell, cellStatus: Math.floor(Math.random() * 2) }));
+    return cells.map((cell) => ({ ...cell, cellStatus: Math.floor(Math.random() * 2) }));
 }
 
 /**
@@ -30,7 +30,7 @@ export function getNewCellStatus(index: number, currentState: number, prevCells:
     const width = cellsHorizontalCount;
     const leftEdge = index % width === 0;
     const rightEdge = (index + 1) % width === 0;
-    let indexs = [];
+    const indexs = [];
 
     // check either sides
     if (!leftEdge) indexs.push(index - 1);
@@ -39,19 +39,19 @@ export function getNewCellStatus(index: number, currentState: number, prevCells:
     // check three cells above
     if (index > width - 1) {
         indexs.push(index - width);
-        if (!leftEdge) indexs.push((index - width) - 1);
-        if (!rightEdge) indexs.push((index - width) + 1);
+        if (!leftEdge) indexs.push(index - width - 1);
+        if (!rightEdge) indexs.push(index - width + 1);
     }
 
     // check three cells below
-    if (index < (prevCells.length - width) - 1) {
+    if (index < prevCells.length - width - 1) {
         indexs.push(index + width);
-        if (!leftEdge) indexs.push((index + width) - 1);
-        if (!rightEdge) indexs.push((index + width) + 1);
+        if (!leftEdge) indexs.push(index + width - 1);
+        if (!rightEdge) indexs.push(index + width + 1);
     }
 
     // find the amount of neigbours
-    const neighbours = indexs.filter(i => (prevCells[i].cellStatus !== CELL_STATUS.DEAD)).length;
+    const neighbours = indexs.filter((i) => prevCells[i].cellStatus !== CELL_STATUS.DEAD).length;
 
     // return new state depending on amount of neighbours
     if ((currentState !== CELL_STATUS.DEAD && neighbours > 3) || neighbours < 2) {
@@ -66,7 +66,7 @@ export function getNewCellStatus(index: number, currentState: number, prevCells:
 }
 
 /**
- * Gets next cell life cycle 
+ * Gets next cell life cycle
  * @param cells current cells array
  * @returns array of updated cells if nothing has changed original array is returned to prevent mutation
  */
@@ -79,29 +79,29 @@ export const getNextCellsLifeCycle = (cells: Cell[], cellsHorizontalCount: numbe
             return {
                 ...cell,
                 cellStatus: newCellStatus,
-            }
+            };
         }
         return cell;
     });
     return cellsHaveChanged ? updatedCells : cells;
-}
+};
 
 /**
  * Splits array in to chunks of specified size
  * @param chunkSize size of chunk to split array by
  * @param arr array to split into chunks
  */
-export const chunkArray = <T,>(chunkSize: number, arr: T[]) => {
+export const chunkArray = <T>(chunkSize: number, arr: T[]) => {
     return arr.reduce((resultArray: T[][], item, index) => {
         const chunkIndex = Math.floor(index / chunkSize);
 
         if (!resultArray[chunkIndex]) resultArray[chunkIndex] = [] as T[];
 
-        resultArray[chunkIndex].push(item)
+        resultArray[chunkIndex].push(item);
 
-        return resultArray
+        return resultArray;
     }, []);
-}
+};
 
 const HEADER_HEIGHT = 70;
 const FOOTER_HEIGHT = 30;
@@ -110,11 +110,10 @@ const MOBILE_FOOTER_HEIGHT = 50;
 const viewportMargins = () => {
     const { innerWidth } = window;
     return HEADER_HEIGHT + (innerWidth <= 800 ? MOBILE_FOOTER_HEIGHT : FOOTER_HEIGHT);
-}
-
+};
 
 /**
- * Gets the amount of cells that can fit on the screen horizontally and in total 
+ * Gets the amount of cells that can fit on the screen horizontally and in total
  * @param boardDimensions the width and height of the board element in pixels
  */
 export const getCellCount = (boardDimensions: BoardDimensions) => {
@@ -126,4 +125,4 @@ export const getCellCount = (boardDimensions: BoardDimensions) => {
         horizontalCellCount,
         totalCellCount,
     };
-}
+};

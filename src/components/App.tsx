@@ -24,39 +24,49 @@ const App = () => {
 
     const cellsLifeCycle = useCallback((): void => {
         if (!boardSize) return;
-        setCells(currentCells => getNextCellsLifeCycle(currentCells, boardSize.horizontalCellCount));
+        setCells((currentCells) => getNextCellsLifeCycle(currentCells, boardSize.horizontalCellCount));
     }, [boardSize]);
 
-    const handleResetCells = useCallback((isInitial?: boolean): void => {
-        if (intervalRef.current) clearInterval(intervalRef.current);
-        if (!boardSize) return;
-        const cells = generateNewBoard(boardSize.totalCellCount);
-
-        if (!isInitial) {
-            setCounter(0);
-            setIntervalMs(BASE_INTERVAL_MS);
-            setIsPaused(false);
-        }
-
-        setCells(initializeCellStatus(cells));
-        intervalRef.current = setInterval(cellsLifeCycle, BASE_INTERVAL_MS);
-    }, [cellsLifeCycle, boardSize]);
-
-    const handleSpeedChange = useCallback((newDelay: number) => {
-        if (!isPaused) {
+    const handleResetCells = useCallback(
+        (isInitial?: boolean): void => {
             if (intervalRef.current) clearInterval(intervalRef.current);
-            intervalRef.current = setInterval(cellsLifeCycle, newDelay);
-        }
-        setIntervalMs(newDelay);
-    }, [cellsLifeCycle, isPaused]);
+            if (!boardSize) return;
+            const cells = generateNewBoard(boardSize.totalCellCount);
+
+            if (!isInitial) {
+                setCounter(0);
+                setIntervalMs(BASE_INTERVAL_MS);
+                setIsPaused(false);
+            }
+
+            setCells(initializeCellStatus(cells));
+            intervalRef.current = setInterval(cellsLifeCycle, BASE_INTERVAL_MS);
+        },
+        [cellsLifeCycle, boardSize],
+    );
+
+    const handleSpeedChange = useCallback(
+        (newDelay: number) => {
+            if (!isPaused) {
+                if (intervalRef.current) clearInterval(intervalRef.current);
+                intervalRef.current = setInterval(cellsLifeCycle, newDelay);
+            }
+            setIntervalMs(newDelay);
+        },
+        [cellsLifeCycle, isPaused],
+    );
 
     const handleCellClick = useCallback((id: number): void => {
-        setCells(currentCells => currentCells.map(cell => (
-            cell.id === id ? {
-                ...cell,
-                cellStatus: cell.cellStatus === CELL_STATUS.YOUNG ? CELL_STATUS.DEAD : CELL_STATUS.YOUNG,
-            } : cell
-        )));
+        setCells((currentCells) =>
+            currentCells.map((cell) =>
+                cell.id === id
+                    ? {
+                          ...cell,
+                          cellStatus: cell.cellStatus === CELL_STATUS.YOUNG ? CELL_STATUS.DEAD : CELL_STATUS.YOUNG,
+                      }
+                    : cell,
+            ),
+        );
     }, []);
 
     const handlePause = useCallback((): void => {
@@ -73,10 +83,10 @@ const App = () => {
         if (isPaused) {
             handlePlay();
             return;
-        } 
+        }
         handlePause();
     }, [handlePause, isPaused, handlePlay]);
-    
+
     const handleClear = useCallback((): void => {
         handlePause();
         if (!boardSize) return;
@@ -84,7 +94,7 @@ const App = () => {
     }, [handlePause, boardSize]);
 
     useEffect(() => {
-        setCounter(currentCount => currentCount + 1);
+        setCounter((currentCount) => currentCount + 1);
     }, [cells]);
 
     useEffect(() => {
@@ -117,24 +127,18 @@ const App = () => {
                     lifeCycleCount={counter}
                 />
             )}
-            
+
             <div className="life-board" ref={boardElementRef} style={boardDimensions}>
                 {cells.length > 0 && <LifeBoard cells={cells} clickCell={handleCellClick} />}
             </div>
 
             {isMobile && (
                 <footer className="mobile-section">
-                    <Controls
-                        onPlay={toggleLifeCycle}
-                        onClear={handleClear}
-                        onReset={handleResetCells}
-                        isPaused={isPaused}
-                    />
-                </footer> 
+                    <Controls onPlay={toggleLifeCycle} onClear={handleClear} onReset={handleResetCells} isPaused={isPaused} />
+                </footer>
             )}
         </ThemeProvider>
-    )
-
-}
+    );
+};
 
 export default App;
