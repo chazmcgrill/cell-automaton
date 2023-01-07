@@ -1,0 +1,9 @@
+{
+    "extends": "./tsconfig",
+    "compilerOptions": {
+        "jsx": "react",
+        "module": "esnext"
+    },
+    "include": ["src/**/*", "**/__tests__/*", "**/__mocks__/*", "src/**/*.test.ts", "src/**/*.test.tsx"],
+    "exclude": []
+}

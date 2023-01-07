@@ -16,40 +16,29 @@ interface HeaderProps {
     lifeCycleCount: number;
 }
 
-const SPEED_BUTTON_ITEMS = SPEED_MULTIPLIERS.map(multiplier => ({
-    value: BASE_INTERVAL_MS / multiplier, // interval delay
+const SPEED_BUTTON_ITEMS = SPEED_MULTIPLIERS.map((multiplier) => ({
+    // interval delay
+    value: BASE_INTERVAL_MS / multiplier,
     label: `X${multiplier}`,
 })) as ButtonItem<number>[];
 
-const Header = ({
-    toggleLifeCycle,
-    isPaused,
-    onClear,
-    onReset,
-    handleSpeedChange,
-    intervalMs,
-    lifeCycleCount,
-}: HeaderProps): JSX.Element => (
+const Header = ({ toggleLifeCycle, isPaused, onClear, onReset, handleSpeedChange, intervalMs, lifeCycleCount }: HeaderProps): JSX.Element => (
     <header>
         <Heading importance={4}>Cell Automaton</Heading>
         <div className="row">
             <Stat label="Life cycles" value={lifeCycleCount} />
-            
-            <Controls
-                onPlay={toggleLifeCycle}
-                onClear={onClear}
-                onReset={onReset}
-                isPaused={isPaused}
-            />
+
+            <Controls onPlay={toggleLifeCycle} onClear={onClear} onReset={onReset} isPaused={isPaused} />
             <ButtonGroup
                 buttonItems={SPEED_BUTTON_ITEMS}
                 selectedValue={intervalMs}
+                // TODO: fix this ts-ignore
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
-                onClickButton={handleSpeedChange} 
+                onClickButton={handleSpeedChange}
             />
         </div>
     </header>
 );
-
 
 export default memo(Header);

@@ -1,23 +1,50 @@
 {
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true
+    },
     "extends": [
-        "eslint:recommended",
-        "react-app"
+        "plugin:react/recommended",
+        "plugin:react-hooks/recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
+    "plugins": ["react", "@typescript-eslint"],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module",
+        "project": "./tsconfig.dev.json"
+    },
     "rules": {
-        "indent": "off",
-        "@typescript-eslint/indent": [
-            "error",
-            4
-        ],
-        "no-unused-vars": "warn",
-        "comma-dangle": [
-            "error",
-            "always-multiline"
-        ],
-        "array-bracket-spacing": [
-            "error",
-            "never"
-        ],
-        "no-unneeded-ternary": "warn"
+        "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+        "react/prop-types": "off",
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": ["error", { "variables": false }],
+        "spaced-comment": "error",
+        "no-inline-comments": "error",
+        "no-console": "error",
+        "no-warning-comments": ["warn", { "terms": ["@todo", "todo", "fixme"], "location": "start" }],
+        "@typescript-eslint/lines-between-class-members": ["error", "always", { "exceptAfterOverload": true, "exceptAfterSingleLine": true }],
+        "@typescript-eslint/no-floating-promises": "error"
+    },
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [".js", ".ts", ".tsx", "test.ts", "test.tsx"]
+            }
+        },
+        "react": {
+            "version": "detect"
+        }
+    },
+    "ignorePatterns": ["jest-setup.js", ".eslintrc.js"],
+    "globals": {
+        "__DEV__": true
     }
 }

@@ -16,40 +16,32 @@ const GroupButton = styled.button<{ isActive: boolean }>`
     cursor: pointer;
     outline: none;
     transition: background-color 0.3s;
-    border-top: 1px solid #BDBBB9;
-    border-bottom: 1px solid #BDBBB9;
-    border-right: 1px solid #BDBBB9;
-    background-color: ${({ theme, isActive }) => isActive ? lighten(0.3, theme.colors.primary) : theme.colors.white};
+    border-top: 1px solid #bdbbb9;
+    border-bottom: 1px solid #bdbbb9;
+    border-right: 1px solid #bdbbb9;
+    background-color: ${({ theme, isActive }) => (isActive ? lighten(0.3, theme.colors.primary) : theme.colors.white)};
 
     &:hover {
-        background-color: ${({ theme, isActive }) => isActive ? lighten(0.2, theme.colors.primary) : lighten(0.45, theme.colors.primary) }
+        background-color: ${({ theme, isActive }) => (isActive ? lighten(0.2, theme.colors.primary) : lighten(0.45, theme.colors.primary))};
     }
 
     &:first-child {
         border-top-left-radius: 4px;
         border-bottom-left-radius: 4px;
-        border-left: 1px solid #BDBBB9;
+        border-left: 1px solid #bdbbb9;
     }
 
     &:last-child {
         border-top-right-radius: 4px;
         border-bottom-right-radius: 4px;
-        border-right: 1px solid #BDBBB9;
+        border-right: 1px solid #bdbbb9;
     }
-`
+`;
 
-const ButtonGroup = <T extends ButtonValue, >({ 
-    buttonItems, 
-    onClickButton, 
-    selectedValue, 
-}: ButtonGroupProps<T>): JSX.Element => (
+const ButtonGroup = <T extends ButtonValue>({ buttonItems, onClickButton, selectedValue }: ButtonGroupProps<T>): JSX.Element => (
     <div>
-        {buttonItems.map(item => (
-            <GroupButton
-                key={`${item.value}`}
-                onClick={() => onClickButton(item.value)}
-                isActive={selectedValue === item.value}
-            >
+        {buttonItems.map((item) => (
+            <GroupButton key={`${item.value}`} onClick={() => onClickButton(item.value)} isActive={selectedValue === item.value}>
                 {item.label}
             </GroupButton>
         ))}
