@@ -15,7 +15,8 @@ View project [here](https://cell-automaton.charlietaylorcoder.com/)
 -   [React](https://reactjs.org/)
 -   [Typescript](https://www.typescriptlang.org/)
 -   [Sass](https://sass-lang.com/)
--   [Styled-Components](https://styled-components.com/)
+-   [React Testing Library](https://testing-library.com/docs/react-testing-library)
+-   [Jest](https://jestjs.io/)
 
 #### To Run Locally
 
