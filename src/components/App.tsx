@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import LifeBoard from './LifeBoard';
-import { generateNewBoard, initializeCellStatus, getNextCellsLifeCycle, getCellCount } from '../utils';
+import { generateNewBoard, initializeCellStatus, getNextCellsLifeCycle, getCellCount } from '../utils/utils';
 import { BASE_INTERVAL_MS, CELL_STATUS } from '../config';
 import { BoardDimensions, Cell } from '../utils/types';
 import Header from './Header';
